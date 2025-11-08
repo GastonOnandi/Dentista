@@ -25,6 +25,6 @@ public class Tratamiento {
     @OneToMany(mappedBy = "tratamiento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClienteTratamiento> clienteTratamientos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "tratamiento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoTratamiento> historico = new ArrayList<>();
 }
