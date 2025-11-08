@@ -1,5 +1,6 @@
 package com.ProyectoWilson.demo.Entities;
 
+import com.ProyectoWilson.demo.Entities.Historico.HistoricoTratamiento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,12 @@ public class Tratamiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String Nombre;
+    private String nombre;
     private Long costo;
+
     @OneToMany(mappedBy = "tratamiento", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClienteTratamiento> clienteTratamientos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HistoricoTratamiento> historico = new ArrayList<>();
 }

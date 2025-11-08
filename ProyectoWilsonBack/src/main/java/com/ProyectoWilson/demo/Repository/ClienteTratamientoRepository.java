@@ -1,4 +1,7 @@
 package com.ProyectoWilson.demo.Repository;
 
-public interface ClienteTratamientoRepository {
+import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ClienteTratamientoRepository extends JpaRepository<ClienteTratamiento,Long> {
 }
