@@ -2,7 +2,9 @@ package com.ProyectoWilson.demo.Mapper.Historico;
 
 import com.ProyectoWilson.demo.DTO.Response.Historico.HistoricoTratamientoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Historico.HistoricoTratamiento;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HistoricoTratamientoMapper {
     public HistoricoTratamientoResponseDTO toResponseDTO (HistoricoTratamiento hTratamiento){
         HistoricoTratamientoResponseDTO dto = new HistoricoTratamientoResponseDTO();

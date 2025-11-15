@@ -1,13 +1,18 @@
 package com.ProyectoWilson.demo.Service.Interfaces;
 
-import com.ProyectoWilson.demo.DTO.Request.TratamientoRequestDTO;
-import com.ProyectoWilson.demo.DTO.Response.TratamientoResponseDTO;
 
+import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
+
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ClienteTratamientoService {
-    TratamientoResponseDTO registrarTratamiento(TratamientoRequestDTO dto);
-    List<TratamientoResponseDTO> listarTratamientos();
-    Void actualizarTratamiento(Long id, TratamientoRequestDTO dto);
-
+    void asociarTratamiento(Long idCliente, Long idTratamiento, LocalDate fecha);
+    List<ClienteTratamiento> obtenerPorCliente(Long idCliente);
+    List<ClienteTratamiento> obtenerPorTratamiento(Long idTratamiento);
+    List<ClienteTratamiento> obtenerPorFecha(LocalDate fecha);
+    List<ClienteTratamiento> obtenerPorRangoDeFechas(LocalDate fechaInicio, LocalDate fechaFin);
+    List<ClienteTratamiento> obtenerPorClienteEnRangoFechas(Long idCliente,LocalDate fechaInicio,LocalDate fechaFin);
+    List<ClienteTratamiento> obtenerPorClienteConFechaDesc(Long idCliente);
+    void eliminar (Long id);
 }

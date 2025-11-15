@@ -7,7 +7,7 @@ import com.ProyectoWilson.demo.Entities.Tratamiento;
 import java.util.List;
 
 public interface HistoricoTratamientoService {
-    Void registrarAgregar (Tratamiento nuevo);
-    Void registrarModificacion (Tratamiento anterior, Tratamiento nuevo);
+    void registrarAgregar (Tratamiento nuevo);
+    void registrarModificacion (Tratamiento anterior, Tratamiento nuevo);
     List<HistoricoTratamientoResponseDTO> listarPorTratamiento(Tratamiento tratamiento);
 }
