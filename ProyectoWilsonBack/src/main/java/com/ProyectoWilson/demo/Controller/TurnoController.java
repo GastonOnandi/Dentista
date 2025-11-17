@@ -1,11 +1,58 @@
 package com.ProyectoWilson.demo.Controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ProyectoWilson.demo.DTO.Request.TurnoRequestDTO;
+import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
+import com.ProyectoWilson.demo.Service.Interfaces.TurnoService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/turno")
 @CrossOrigin(origins = "http://localhost:5173")
 public class TurnoController {
+    @Autowired
+    private TurnoService turnoService;
+
+    @PostMapping("/agendar")
+    public ResponseEntity<TurnoResponseDTO> agendarTurno(@Valid @RequestBody TurnoRequestDTO dto) {
+        TurnoResponseDTO response = turnoService.agendarTurno(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{idTurno}/reprogramar")
+    public ResponseEntity<Void> reprogramarTurno(@PathVariable Long idTurno, @Valid @RequestBody TurnoRequestDTO dto) {
+        turnoService.reprogramarTurno(idTurno, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{idTurno}/cancelar")
+    public ResponseEntity<Void> cancelarTurno(@PathVariable Long idTurno) {
+        turnoService.cancelarTurno(idTurno);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<TurnoResponseDTO>> obtenerPorCliente(@PathVariable Long idCliente) {
+        List<TurnoResponseDTO> turnos = turnoService.obtenerPorCliente(idCliente);
+        return ResponseEntity.ok(turnos);
+    }
+
+    @GetMapping("/fechas")
+    public ResponseEntity<List<TurnoResponseDTO>> obtenerPorFechas(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaIni, @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
+        List<TurnoResponseDTO> turnos = turnoService.obtenerPorFechas(fechaIni, fechaFin);
+        return ResponseEntity.ok(turnos);
+    }
+
+    @GetMapping("/existe")
+    public ResponseEntity<Boolean> existeTurnoEnHorario(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha) {
+        boolean existe = turnoService.existeTurnoEnHorario(fecha);
+        return ResponseEntity.ok(existe);
+    }
 }

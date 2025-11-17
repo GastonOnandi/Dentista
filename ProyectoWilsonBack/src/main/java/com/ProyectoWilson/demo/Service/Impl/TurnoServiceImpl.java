@@ -13,7 +13,6 @@ import com.ProyectoWilson.demo.Service.Interfaces.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ public class TurnoServiceImpl implements TurnoService {
         Turno turno = new Turno();
         turno.setFecha(dto.getFecha());
         turno.setClienteAsociado(cliente);
+        turnoRepository.save(turno);
         cliente.getTurnos().add(turno);
         return turnoMapper.toResponseDTO(turno);
     }
@@ -77,4 +77,5 @@ public class TurnoServiceImpl implements TurnoService {
     public boolean existeTurnoEnHorario(LocalDateTime fecha) {
         return turnoRepository.existsByFecha(fecha);
     }
+
 }

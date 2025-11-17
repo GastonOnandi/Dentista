@@ -28,6 +28,7 @@ public class HistoricoTratamientoServiceImpl implements HistoricoTratamientoServ
         historicoTratamiento.setTipoModificacion("Registrar");
         historicoTratamiento.setCostoNuevo(nuevo.getCosto());
         historicoTratamiento.setNombreNuevo(nuevo.getNombre());
+        historicoTratamientoRepository.save(historicoTratamiento);
     }
 
     @Override
@@ -40,6 +41,7 @@ public class HistoricoTratamientoServiceImpl implements HistoricoTratamientoServ
         historicoTratamiento.setNombreNuevo(nuevo.getNombre());
         historicoTratamiento.setNombreViejo(anterior.getNombre());
         historicoTratamiento.setCostoViejo(anterior.getCosto());
+        historicoTratamientoRepository.save(historicoTratamiento);
     }
 
     @Override

@@ -17,8 +17,10 @@ public class ClienteTratamiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Long debe;
+    private Long pago;
     private LocalDate fecha;
+    private String estado;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_cliente")

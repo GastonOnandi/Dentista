@@ -22,6 +22,7 @@ public class ClienteMapper {
         dto.setNombre(cliente.getNombre());
         dto.setDireccion(cliente.getDireccion());
         dto.setTelefono(cliente.getTelefono());
+        dto.setDeuda(cliente.getDeuda());
         return dto;
     }
 }

@@ -2,6 +2,7 @@ package com.ProyectoWilson.demo.Controller;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
+import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,15 @@ public class ClienteController {
     public ResponseEntity<List<ClienteResponseDTO>> mostrarClientes() {
         List<ClienteResponseDTO> clientes = clienteService.mostrarClientes();
         return ResponseEntity.ok(clientes);
+    }
+    @PutMapping("/{idCliente}/tratamientos/{idTratamiento}/pagar")
+    public ResponseEntity<Void> pagarTratamiento(@PathVariable Long idCliente, @PathVariable Long idTratamiento, @RequestBody Long monto) {
+        clienteService.pagarTratamiento(idCliente, idTratamiento, monto);
+        return ResponseEntity.noContent().build();
+    }
+    @GetMapping("/{idCliente}/tratamientos/deuda")
+    public ResponseEntity<List<DeudaTratamientoDTO>> obtenerDetallesTratamientos(@PathVariable Long idCliente) {
+        List<DeudaTratamientoDTO> detalles = clienteService.obtenerDeudaTratamientos(idCliente);
+        return ResponseEntity.ok(detalles);
     }
 }

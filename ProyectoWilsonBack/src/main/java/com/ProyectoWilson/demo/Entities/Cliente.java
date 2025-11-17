@@ -21,6 +21,7 @@ public class Cliente {
     private String nombre;
     private Long telefono;
     private String direccion;
+    private Long deuda;
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClienteTratamiento> tratamientos = new ArrayList<>();
 
@@ -30,4 +31,6 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<HistoricoCliente> historico = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClienteConsideracion> consideraciones = new ArrayList<>();
 }

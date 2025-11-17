@@ -31,6 +31,7 @@ public class HistoricoClienteServiceImpl implements HistoricoClienteService {
         hCliente.setDireccionNueva(nuevo.getDireccion());
         hCliente.setNombreNuevo(nuevo.getNombre());
         hCliente.setTelefonoNuevo(nuevo.getTelefono());
+        historicoClienteRepository.save(hCliente);
     }
 
     @Override
@@ -45,6 +46,7 @@ public class HistoricoClienteServiceImpl implements HistoricoClienteService {
         hCliente.setNombreViejo(anterior.getNombre());
         hCliente.setDireccionVieja(anterior.getDireccion());
         hCliente.setTelefonoViejo(anterior.getTelefono());
+        historicoClienteRepository.save(hCliente);
     }
 
     @Override

@@ -6,16 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class ClienteResponseDTO {
-    private Long cedula;
-    private String nombre;
-    private Long telefono;
-    private String direccion;
-    private Long deuda;
-
+@AllArgsConstructor
+public class ClienteConsideracionResponseDTO {
+    private Long id;
+    private String tipo;
+    private String detalle;
 }

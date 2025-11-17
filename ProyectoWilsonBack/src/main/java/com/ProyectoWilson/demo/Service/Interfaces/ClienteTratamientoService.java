@@ -1,6 +1,7 @@
 package com.ProyectoWilson.demo.Service.Interfaces;
 
 
+import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
 
 import java.time.LocalDate;
@@ -15,4 +16,7 @@ public interface ClienteTratamientoService {
     List<ClienteTratamiento> obtenerPorClienteEnRangoFechas(Long idCliente,LocalDate fechaInicio,LocalDate fechaFin);
     List<ClienteTratamiento> obtenerPorClienteConFechaDesc(Long idCliente);
     void eliminar (Long id);
+    void pagarDeuda(Long idCliente, Long idTratamiento, Long monto);
+    List<DeudaTratamientoDTO> obtenerDeudasPorCliente(Long idCliente);
+
 }

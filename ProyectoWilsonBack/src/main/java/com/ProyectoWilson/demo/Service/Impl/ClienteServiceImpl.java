@@ -2,8 +2,10 @@ package com.ProyectoWilson.demo.Service.Impl;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
+import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.Entities.Cliente;
 import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
+import com.ProyectoWilson.demo.Entities.Tratamiento;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
 import com.ProyectoWilson.demo.Mapper.ClienteMapper;
@@ -35,6 +37,7 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ClienteYaExisteException();
         }
         Cliente cliente = clienteMapper.toEntity(dto);
+        cliente.setDeuda(0L);
         historicoClienteService.registrarAgregar(cliente);
         clienteRepository.save(cliente);
         return clienteMapper.toResponseDTO(cliente);
@@ -68,6 +71,16 @@ public class ClienteServiceImpl implements ClienteService {
             retornar.add(clienteMapper.toResponseDTO(cliente));
         }
         return retornar;
+    }
+
+    @Override
+    public void pagarTratamiento(Long idCliente,Long idTratamiento ,Long monto){
+        clienteTratamientoService.pagarDeuda(idCliente,idTratamiento,monto);
+    }
+
+    @Override
+    public List<DeudaTratamientoDTO> obtenerDeudaTratamientos(Long idCliente) {
+        return clienteTratamientoService.obtenerDeudasPorCliente(idCliente);
     }
 
 
