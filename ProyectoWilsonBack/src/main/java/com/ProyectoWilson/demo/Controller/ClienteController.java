@@ -1,5 +1,6 @@
 package com.ProyectoWilson.demo.Controller;
 
+import com.ProyectoWilson.demo.DTO.Request.ClienteConsideracionRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
@@ -52,5 +53,24 @@ public class ClienteController {
     public ResponseEntity<List<DeudaTratamientoDTO>> obtenerDetallesTratamientos(@PathVariable Long idCliente) {
         List<DeudaTratamientoDTO> detalles = clienteService.obtenerDeudaTratamientos(idCliente);
         return ResponseEntity.ok(detalles);
+    }
+
+
+    @PostMapping("/agregar/{idCliente}")
+    public ResponseEntity<String> agregarConsideracion(@RequestBody ClienteConsideracionRequestDTO dto, @PathVariable Long idCliente) {
+        clienteService.agregarConsideracion(dto.getTipo(), dto.getDetalle(), idCliente);
+        return ResponseEntity.ok("Consideración agregada exitosamente");
+    }
+
+    @PutMapping("/editar/{idConsideracion}")
+    public ResponseEntity<String> editarConsideracion(@PathVariable Long idConsideracion, @RequestBody ClienteConsideracionRequestDTO dto) {
+        clienteService.editarConsideracion(dto.getTipo(), dto.getDetalle(), idConsideracion);
+        return ResponseEntity.ok("Consideración editada exitosamente");
+    }
+
+    @DeleteMapping("/eliminar/{idCliente}/{idConsideracion}")
+    public ResponseEntity<String> eliminarConsideracion(@PathVariable Long idCliente, @PathVariable Long idConsideracion) {
+        clienteService.eliminarConsideracion(idCliente, idConsideracion);
+        return ResponseEntity.ok("Consideración eliminada exitosamente");
     }
 }

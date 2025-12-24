@@ -14,4 +14,7 @@ public interface ClienteService {
     List<ClienteResponseDTO> mostrarClientes();
     void pagarTratamiento(Long idCliente,Long idTratamiento ,Long monto);
     List<DeudaTratamientoDTO> obtenerDeudaTratamientos(Long idCliente);
+    void agregarConsideracion(String tipo, String detalle, Long idCliente);
+    void editarConsideracion(String tipo, String detalle, Long idConsideracion);
+    void eliminarConsideracion(Long idCliente, Long idConsideracion);
 }

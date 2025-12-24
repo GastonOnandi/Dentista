@@ -10,6 +10,7 @@ import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
 import com.ProyectoWilson.demo.Mapper.ClienteMapper;
 import com.ProyectoWilson.demo.Repository.ClienteRepository;
+import com.ProyectoWilson.demo.Service.Interfaces.ClienteConsideracionService;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteTratamientoService;
 import com.ProyectoWilson.demo.Service.Interfaces.Historico.HistoricoClienteService;
@@ -28,6 +29,9 @@ public class ClienteServiceImpl implements ClienteService {
     private HistoricoClienteService historicoClienteService;
     @Autowired
     private ClienteTratamientoService clienteTratamientoService;
+
+    @Autowired
+    private ClienteConsideracionService clienteConsideracionService;
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -82,6 +86,16 @@ public class ClienteServiceImpl implements ClienteService {
     public List<DeudaTratamientoDTO> obtenerDeudaTratamientos(Long idCliente) {
         return clienteTratamientoService.obtenerDeudasPorCliente(idCliente);
     }
-
-
+    @Override
+    public void agregarConsideracion(String tipo, String detalle, Long idCliente){
+        clienteConsideracionService.agregarConsideracion(tipo,detalle,idCliente);
+    }
+    @Override
+    public void editarConsideracion(String tipo, String detalle, Long idConsideracion){
+        clienteConsideracionService.editarConsideracion(tipo,detalle,idConsideracion);
+    }
+    @Override
+    public void eliminarConsideracion(Long idCliente, Long idConsideracion){
+        clienteConsideracionService.eliminarConsideracion(idCliente,idConsideracion);
+    }
 }
