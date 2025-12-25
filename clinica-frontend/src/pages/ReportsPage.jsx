@@ -1,18 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Download, Printer } from 'lucide-react';
 import FilterSection from '../components/FilterSection';
 import ReportsTable from '../components/ReportsTable';
+import PaymentModal from '../components/modal/PaymentModal';
 
 const ReportsPage = () => {
+  const [paymentData, setPaymentData] = useState(null); // ← Datos del paciente seleccionado
+
   const handleFilterChange = (filters) => {
     console.log('Filters changed:', filters);
     // Aquí puedes hacer la llamada a la API con los filtros
   };
 
+  // Cuando la tabla hace click en "Payment"
+  const handlePaymentClick = (rowData) => {
+    setPaymentData(rowData); // ← guarda data y muestra el modal
+  };
+
+  // Cerrar modal
+  const handleCloseModal = () => {
+    setPaymentData(null);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-8 py-8">
-        {/* Header */}
+
+        {/* === Payment Modal === */}
+        {paymentData && (
+          <PaymentModal 
+            data={paymentData}
+            onClose={handleCloseModal}
+          />
+        )}
+
+        {/* === Header === */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Reports</h1>
@@ -30,11 +52,12 @@ const ReportsPage = () => {
           </div>
         </div>
 
-        {/* Filters */}
+        {/* === Filters === */}
         <FilterSection onFilterChange={handleFilterChange} />
 
-        {/* Table */}
-        <ReportsTable />
+        {/* === Table === */}
+        <ReportsTable onPaymentClick={handlePaymentClick} /> 
+        {/* ← ahora la tabla puede abrir el modal */}
       </div>
     </div>
   );

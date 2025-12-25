@@ -28,3 +28,4 @@ const PatientCard = ({ patient, isActive, onClick }) => {
     </div>
   );
 };
+export default PatientCard;
