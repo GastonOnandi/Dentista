@@ -14,39 +14,67 @@ const Sidebar = () => {
         <span className="text-xl font-bold text-gray-900">SmileCare</span>
       </div>
 
+      {/* NAVIGATION */}
       <nav className="flex-1 px-4 space-y-1">
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-cyan-600 bg-cyan-50 rounded-lg font-medium">
+        <Link 
+          to="/" 
+          className="w-full flex items-center gap-3 px-4 py-3 text-cyan-600 bg-cyan-50 rounded-lg font-medium"
+        >
           <LayoutDashboard className="w-5 h-5" />
           Dashboard
-        </button>
+        </Link>
         
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors">
+        <Link 
+          to="/calendario"
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+        >
           <Calendar className="w-5 h-5" />
           Calendar
-        </button>
+        </Link>
         
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors">
+        <Link 
+          to="/patients"
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+        >
           <Users className="w-5 h-5" />
           Patients
-        </button>
+        </Link>
         
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors">
+        <Link 
+          to="/reports"
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+        >
           <BarChart3 className="w-5 h-5" />
           Reports
-        </button>
+        </Link>
         
-        <button className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors">
+        <Link 
+          to="/settings"
+          className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
+        >
           <Settings className="w-5 h-5" />
           Settings
-        </button>
+        </Link>
       </nav>
 
+      {/* BOTTOM BUTTON */}
       <div className="p-4">
-        <button className="w-full bg-cyan-500 text-white py-3 rounded-lg font-semibold hover:bg-cyan-600 transition-colors">
+        <Link 
+          to="/new-appointment"
+          className="w-full block bg-cyan-500 text-white py-3 rounded-lg font-semibold hover:bg-cyan-600 text-center transition-colors"
+        >
           New Appointment
-        </button>
+        </Link>
       </div>
     </div>
   );
 };
 export default Sidebar;
+
+
+
+
+
+
+
+

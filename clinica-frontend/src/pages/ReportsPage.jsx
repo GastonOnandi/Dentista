@@ -1,23 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, Printer } from 'lucide-react';
 import FilterSection from '../components/FilterSection';
 import ReportsTable from '../components/ReportsTable';
 import PaymentModal from '../components/modal/PaymentModal';
 
 const ReportsPage = () => {
-  const [paymentData, setPaymentData] = useState(null); // ← Datos del paciente seleccionado
+  const [paymentData, setPaymentData] = useState(null);
+  const [reports, setReports] = useState([]); 
+  const [loading, setLoading] = useState(false);
 
-  const handleFilterChange = (filters) => {
-    console.log('Filters changed:', filters);
-    // Aquí puedes hacer la llamada a la API con los filtros
+  // === CARGAR TODAS LAS DEUDAS ===
+  useEffect(() => {
+    fetchAllReports();
+  }, []);
+
+  const fetchAllReports = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/clientetratamiento/deudas/pendientes");
+      const data = await response.json();
+      setReports(data);
+    } catch (error) {
+      console.error("Error obteniendo todas las deudas:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Cuando la tabla hace click en "Payment"
+  // === FILTRO FECHAS ===
+  const handleFilterChange = async (filters) => {
+    console.log("Filtros recibidos:", filters);
+
+    if (!filters.startDate || !filters.endDate) {
+      fetchAllReports();
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8080/api/clientetratamiento/fechas", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          inicio: filters.startDate,
+          fin: filters.endDate,
+        })
+      });
+
+      const data = await response.json();
+      setReports(data);
+
+    } catch (error) {
+      console.error("Error filtrando por rango:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // === FILTRO ESTADO ===
+  const handlePaymentStatusChange = async (status) => {
+    if (!status || status === "todos") {
+      fetchAllReports();
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/clientetratamiento/deudas/estado/${status}`,
+        { method: "GET" }
+      );
+
+      const data = await response.json();
+      setReports(data);
+
+    } catch (error) {
+      console.error("Error filtrando por estado de pago:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // === FILTRO TRATAMIENTO ===
+  const handleTreatmentChange = async (treatment) => {
+    if (!treatment || treatment === "todos") {
+      fetchAllReports();
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/clientetratamiento/tratamiento/${treatment}`,
+        { method: "GET" }
+      );
+
+      const data = await response.json();
+      setReports(data);
+
+    } catch (error) {
+      console.error("Error filtrando por tratamiento:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // === ESTA FUNCIÓN TE FALTABA ===
   const handlePaymentClick = (rowData) => {
-    setPaymentData(rowData); // ← guarda data y muestra el modal
+    console.log("Abrir modal con:", rowData);
+    setPaymentData(rowData); // guardás datos del tratamiento seleccionado
   };
 
-  // Cerrar modal
+  // === Cerrar modal ===
   const handleCloseModal = () => {
     setPaymentData(null);
   };
@@ -56,8 +151,13 @@ const ReportsPage = () => {
         <FilterSection onFilterChange={handleFilterChange} />
 
         {/* === Table === */}
-        <ReportsTable onPaymentClick={handlePaymentClick} /> 
-        {/* ← ahora la tabla puede abrir el modal */}
+        {/* ACÁ LE PASÁS LOS DATOS + LA FUNCIÓN */}
+        <ReportsTable 
+          data={reports} 
+          loading={loading}
+          onPaymentClick={handlePaymentClick}
+        />
+
       </div>
     </div>
   );

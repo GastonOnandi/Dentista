@@ -79,9 +79,9 @@ const RegisterPatientPage = () => {
       telefono: parseInt(formData.telefono),
       direccion: formData.direccion.trim()
     };
-    
+      // Vinculo con el backend
     try {
-      const response = await fetch('http://localhost:8080/api/pacientes', {
+      const response = await fetch('http://localhost:8080/api/cliente/registrar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(dataToSend)
