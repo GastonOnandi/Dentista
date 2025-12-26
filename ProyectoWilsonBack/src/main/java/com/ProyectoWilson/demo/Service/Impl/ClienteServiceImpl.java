@@ -42,8 +42,8 @@ public class ClienteServiceImpl implements ClienteService {
         }
         Cliente cliente = clienteMapper.toEntity(dto);
         cliente.setDeuda(0L);
-        historicoClienteService.registrarAgregar(cliente);
         clienteRepository.save(cliente);
+        historicoClienteService.registrarAgregar(cliente);
         return clienteMapper.toResponseDTO(cliente);
     }
 
@@ -86,6 +86,9 @@ public class ClienteServiceImpl implements ClienteService {
     public List<DeudaTratamientoDTO> obtenerDeudaTratamientos(Long idCliente) {
         return clienteTratamientoService.obtenerDeudasPorCliente(idCliente);
     }
+
+
+
     @Override
     public void agregarConsideracion(String tipo, String detalle, Long idCliente){
         clienteConsideracionService.agregarConsideracion(tipo,detalle,idCliente);

@@ -62,6 +62,8 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
 
     }
 
+
+
     @Override
     public List<DeudaTratamientoDTO> obtenerDeudasPorCliente(Long idCliente) {
         List<ClienteTratamiento> clienteTratamientos = clienteTratamientoRepository.findByClienteCedula(idCliente);
@@ -74,11 +76,12 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
 
             if (deuda > 0){
                 DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
-                    ct.getTratamiento().getNombre(),
-                    ct.getFecha(),
-                    pago,
-                    deuda,
-                    total);
+                        ct.getCliente().getNombre(),
+                        ct.getTratamiento().getNombre(),
+                        ct.getFecha(),
+                        pago,
+                        deuda,
+                        total);
                 deudaTratamientoDTOS.add(dto);
             }
 
@@ -87,8 +90,71 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
     }
 
     @Override
-    public List<ClienteTratamiento> obtenerPorCliente(Long idCliente) {
-        return clienteTratamientoRepository.findByClienteCedula(idCliente);
+    public List<DeudaTratamientoDTO> obtenerTodasLasDeudas() {
+        List<ClienteTratamiento> clienteTratamientos = clienteTratamientoRepository.findAllWithClienteAndTratamiento();
+        List<DeudaTratamientoDTO> deudaTratamientoDTOS = new ArrayList<>();
+        for (ClienteTratamiento ct: clienteTratamientos) {
+            Long pago = ct.getPago();
+            Long total = ct.getTratamiento().getCosto();
+            Long deuda = total - pago;
+            DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                    ct.getCliente().getNombre(),
+                    ct.getTratamiento().getNombre(),
+                    ct.getFecha(),
+                    pago,
+                    deuda,
+                    total
+            );
+            deudaTratamientoDTOS.add(dto);
+
+        }
+        return deudaTratamientoDTOS;
+    }
+
+    @Override
+    public List<DeudaTratamientoDTO> obtenerDeudasPendientes() {
+        List<ClienteTratamiento> clienteTratamientos = clienteTratamientoRepository.findAllWithClienteAndTratamiento();
+        List<DeudaTratamientoDTO> deudaTratamientoDTOS = new ArrayList<>();
+        for (ClienteTratamiento ct: clienteTratamientos) {
+            Long pago = ct.getPago();
+            Long total = ct.getTratamiento().getCosto();
+            Long deuda = total - pago;
+            if (deuda > 0) {
+                DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                        ct.getCliente().getNombre(),
+                        ct.getTratamiento().getNombre(),
+                        ct.getFecha(),
+                        pago,
+                        deuda,
+                        total
+                );
+            deudaTratamientoDTOS.add(dto);
+        }
+        }
+        return deudaTratamientoDTOS;
+    }
+
+    @Override
+    public List<DeudaTratamientoDTO> obtenerDeudasPorEstado(String estado) {
+        List<ClienteTratamiento> clienteTratamientos = clienteTratamientoRepository.findAllWithClienteAndTratamiento();
+        List<DeudaTratamientoDTO> deudaTratamientoDTOS = new ArrayList<>();
+        for (ClienteTratamiento ct: clienteTratamientos) {
+            Long pago = ct.getPago();
+            Long total = ct.getTratamiento().getCosto();
+            Long deuda = total - pago;
+            if (ct.getEstado() == estado) {
+                DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                        ct.getCliente().getNombre(),
+                        ct.getTratamiento().getNombre(),
+                        ct.getFecha(),
+                        pago,
+                        deuda,
+                        total
+                );
+                deudaTratamientoDTOS.add(dto);
+            }
+        }
+        return deudaTratamientoDTOS;
     }
 
     @Override

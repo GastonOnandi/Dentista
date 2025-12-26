@@ -26,4 +26,26 @@ public interface ClienteTratamientoRepository extends JpaRepository<ClienteTrata
 
     Optional<ClienteTratamiento> findByClienteCedulaAndTratamientoId(Long clienteCedula, Long tratamientoId);
 
+    // Método para obtener todas las deudas con información del cliente y tratamiento
+    @Query("SELECT ct FROM ClienteTratamiento ct " +
+            "JOIN FETCH ct.cliente c " +
+            "JOIN FETCH ct.tratamiento t " +
+            "ORDER BY ct.fecha DESC")
+    List<ClienteTratamiento> findAllWithClienteAndTratamiento();
+
+    // Opcional: Filtrar solo las que tienen deuda pendiente
+    @Query("SELECT ct FROM ClienteTratamiento ct " +
+            "JOIN FETCH ct.cliente c " +
+            "JOIN FETCH ct.tratamiento t " +
+            "WHERE ct.debe > 0 " +
+            "ORDER BY ct.fecha DESC")
+    List<ClienteTratamiento> findAllPendingDebts();
+
+    // Opcional: Filtrar por estado
+    @Query("SELECT ct FROM ClienteTratamiento ct " +
+            "JOIN FETCH ct.cliente c " +
+            "JOIN FETCH ct.tratamiento t " +
+            "WHERE ct.estado = :estado " +
+            "ORDER BY ct.fecha DESC")
+    List<ClienteTratamiento> findByEstado(String estado);
 }
