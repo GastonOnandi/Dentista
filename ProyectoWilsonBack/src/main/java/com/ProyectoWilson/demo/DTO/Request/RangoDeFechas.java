@@ -6,11 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RangoDeFechas {
-    private String inicio;
-    private String fin;
+    private LocalDate inicio;
+    private LocalDate fin;
 }

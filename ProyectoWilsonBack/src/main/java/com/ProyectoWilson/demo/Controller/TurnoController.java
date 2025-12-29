@@ -1,7 +1,9 @@
 package com.ProyectoWilson.demo.Controller;
 
+import com.ProyectoWilson.demo.DTO.Request.RangoDeFechas;
 import com.ProyectoWilson.demo.DTO.Request.TurnoRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
+import com.ProyectoWilson.demo.DTO.Response.TurnosPorDia;
 import com.ProyectoWilson.demo.Service.Interfaces.TurnoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,8 +48,9 @@ public class TurnoController {
     }
 
     @GetMapping("/fechas")
-    public ResponseEntity<List<TurnoResponseDTO>> obtenerPorFechas(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaIni, @RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
-        List<TurnoResponseDTO> turnos = turnoService.obtenerPorFechas(fechaIni, fechaFin);
+    public ResponseEntity<List<TurnoResponseDTO>> obtenerPorFechas(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
+        RangoDeFechas rangoDeFechas = new RangoDeFechas(inicio, fin);
+        List<TurnoResponseDTO> turnos = turnoService.obtenerPorFechas(rangoDeFechas);
         return ResponseEntity.ok(turnos);
     }
 
@@ -54,5 +58,11 @@ public class TurnoController {
     public ResponseEntity<Boolean> existeTurnoEnHorario(@RequestBody @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha) {
         boolean existe = turnoService.existeTurnoEnHorario(fecha);
         return ResponseEntity.ok(existe);
+    }
+
+    @GetMapping("/proximos")
+    public ResponseEntity<List<TurnosPorDia>> obtenerTurnosProximosAgrupados() {
+        List<TurnosPorDia> turnos = turnoService.obtenerTurnosAgrupados();
+        return ResponseEntity.ok(turnos);
     }
 }

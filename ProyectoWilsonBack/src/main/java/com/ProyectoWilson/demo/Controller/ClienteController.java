@@ -4,6 +4,7 @@ import com.ProyectoWilson.demo.DTO.Request.ClienteConsideracionRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
+import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +73,11 @@ public class ClienteController {
     public ResponseEntity<String> eliminarConsideracion(@PathVariable Long idCliente, @PathVariable Long idConsideracion) {
         clienteService.eliminarConsideracion(idCliente, idConsideracion);
         return ResponseEntity.ok("Consideración eliminada exitosamente");
+    }
+
+    @GetMapping("/cliente/{idCliente}")
+    public ResponseEntity<List<TurnoResponseDTO>> obtenerTurnosPorCliente(@PathVariable Long idCliente) {
+        List<TurnoResponseDTO> citas = clienteService.citasPorCliente(idCliente);
+        return ResponseEntity.ok(citas);
     }
 }

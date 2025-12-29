@@ -3,6 +3,7 @@ package com.ProyectoWilson.demo.Service.Interfaces;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
+import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,4 +18,5 @@ public interface ClienteService {
     void agregarConsideracion(String tipo, String detalle, Long idCliente);
     void editarConsideracion(String tipo, String detalle, Long idConsideracion);
     void eliminarConsideracion(Long idCliente, Long idConsideracion);
+    List<TurnoResponseDTO> citasPorCliente(Long idCliente);
 }

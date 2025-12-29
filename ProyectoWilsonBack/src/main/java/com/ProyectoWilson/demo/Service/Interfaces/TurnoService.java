@@ -1,10 +1,10 @@
 package com.ProyectoWilson.demo.Service.Interfaces;
 
+import com.ProyectoWilson.demo.DTO.Request.RangoDeFechas;
 import com.ProyectoWilson.demo.DTO.Request.TurnoRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
-import com.ProyectoWilson.demo.Entities.Turno;
+import com.ProyectoWilson.demo.DTO.Response.TurnosPorDia;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface TurnoService {
     void reprogramarTurno(Long idTurno, TurnoRequestDTO dto);
     void cancelarTurno(Long idTurno);
     List<TurnoResponseDTO> obtenerPorCliente(Long idCliente);
-    List<TurnoResponseDTO> obtenerPorFechas(LocalDateTime fechaIni,LocalDateTime fechaFin);
+    List<TurnoResponseDTO> obtenerPorFechas(RangoDeFechas rangoDeFechas);
     boolean existeTurnoEnHorario(LocalDateTime fecha);
-
+    List<TurnosPorDia> obtenerTurnosAgrupados();
 }

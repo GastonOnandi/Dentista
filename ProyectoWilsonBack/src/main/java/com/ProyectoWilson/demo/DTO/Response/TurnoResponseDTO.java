@@ -1,17 +1,19 @@
 package com.ProyectoWilson.demo.DTO.Response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class TurnoResponseDTO {
-    private Long id;
-    private LocalDateTime fecha;
+public record TurnoResponseDTO(
+        Long id,
+        String nombreCliente,
+        String tratamiento,
+        @JsonFormat(pattern = "dd-MM-yyyy")
+        LocalDate fecha,
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime horaInicio,
+        @JsonFormat(pattern = "HH:mm")
+        LocalTime horaFin
+) {
 }

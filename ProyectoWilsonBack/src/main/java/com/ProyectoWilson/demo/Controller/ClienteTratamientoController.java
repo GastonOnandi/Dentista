@@ -64,8 +64,8 @@ public class ClienteTratamientoController {
     /** Tratamientos en rango de fechas */
     @GetMapping("/fechas")
     public ResponseEntity<List<ClienteTratamiento>> obtenerPorRangoDeFechas(RangoDeFechas rangoDeFechas) {
-        LocalDate fechaInicio = LocalDate.parse(rangoDeFechas.getInicio());
-        LocalDate fechaFin = LocalDate.parse(rangoDeFechas.getFin());
+        LocalDate fechaInicio = rangoDeFechas.getInicio();
+        LocalDate fechaFin = rangoDeFechas.getFin();
         return ResponseEntity.ok(clienteTratamientoService.obtenerPorRangoDeFechas(fechaInicio, fechaFin));
     }
 }

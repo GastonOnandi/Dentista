@@ -3,12 +3,13 @@ package com.ProyectoWilson.demo.Service.Impl;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
+import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Cliente;
-import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
-import com.ProyectoWilson.demo.Entities.Tratamiento;
+import com.ProyectoWilson.demo.Entities.Turno;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
 import com.ProyectoWilson.demo.Mapper.ClienteMapper;
+import com.ProyectoWilson.demo.Mapper.TurnoMapper;
 import com.ProyectoWilson.demo.Repository.ClienteRepository;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteConsideracionService;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
@@ -35,6 +36,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private TurnoMapper turnoMapper;
     @Override
     public ClienteResponseDTO registrarCliente(ClienteRequestDTO dto) {
         if (clienteRepository.existsByCedula(dto.getCedula())) {
@@ -101,4 +105,20 @@ public class ClienteServiceImpl implements ClienteService {
     public void eliminarConsideracion(Long idCliente, Long idConsideracion){
         clienteConsideracionService.eliminarConsideracion(idCliente,idConsideracion);
     }
+
+    @Override
+    public List<TurnoResponseDTO> citasPorCliente(Long idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNoExiste::new);
+        List<Turno> turnos = cliente.getTurnos();
+        List<TurnoResponseDTO> retornar = new ArrayList<>();
+        for (Turno turno: turnos){
+            retornar.add(turnoMapper.toResponseDTO(turno));
+        }
+        return retornar;
+    }
+
+
+
+
 }
+
