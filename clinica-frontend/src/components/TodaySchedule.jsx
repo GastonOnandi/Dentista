@@ -1,34 +1,86 @@
-import React from 'react';
-import { CheckCircle2, Droplet, Activity } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CheckCircle2, Clock } from 'lucide-react';
 
 const TodaySchedule = () => {
-  const todaySchedule = [
-    { name: "John Doe", type: "Check-up", time: "9:00 AM - 9:30 AM", icon: CheckCircle2, iconColor: "text-cyan-500", bgColor: "bg-cyan-50" },
-    { name: "Jane Smith", type: "Cleaning", time: "10:00 AM - 10:45 AM", icon: Droplet, iconColor: "text-blue-500", bgColor: "bg-blue-50" },
-    { name: "Peter Pan", type: "Filling", time: "11:00 AM - 12:00 PM", icon: Activity, iconColor: "text-cyan-500", bgColor: "bg-cyan-50" },
-    { name: "Mary Poppins", type: "Consultation", time: "12:00 PM - 12:30 PM", icon: Activity, iconColor: "text-cyan-500", bgColor: "bg-cyan-50" }
-  ];
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+    fetch(`http://localhost:8080/api/turno/fechas?inicio=${today}&fin=${today}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Data received:", data); // Para debug
+        // Asegurarse de que data sea un array
+        setAppointments(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error loading schedule:", err);
+        setError(err.message);
+        setAppointments([]); // Establecer array vacío en caso de error
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
+        <p className="text-red-500">Error: {error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
       <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
       <div className="space-y-4">
-        {todaySchedule.map((appointment, index) => {
-          const Icon = appointment.icon;
-          return (
-            <div key={index} className="flex items-center gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
-              <div className={`${appointment.bgColor} p-3 rounded-lg`}>
-                <Icon className={`w-5 h-5 ${appointment.iconColor}`} />
+        {appointments.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">No appointments scheduled for today</p>
+        ) : (
+          appointments.map((appointment, index) => (
+            <div key={appointment.id || index} className="flex items-center gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+              <div className="bg-cyan-50 p-3 rounded-lg">
+                <Clock className="w-5 h-5 text-cyan-500" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900">{appointment.name} - {appointment.type}</h3>
-                <p className="text-sm text-gray-500">{appointment.time}</p>
+                <h3 className="font-semibold text-gray-900">
+                  {appointment.nombreCliente} - {appointment.nombreTratamiento}
+                </h3>
+                <p className="text-sm text-gray-500">
+                  {appointment.horaInicio} - {appointment.horaFin}
+                </p>
+              </div>
+              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                appointment.estado === 'Confirmado' ? 'bg-green-100 text-green-700' :
+                appointment.estado === 'Pendiente' ? 'bg-yellow-100 text-yellow-700' :
+                'bg-gray-100 text-gray-700'
+              }`}>
+                {appointment.estado}
               </div>
             </div>
-          );
-        })}
+          ))
+        )}
       </div>
     </div>
   );
 };
+
 export default TodaySchedule;

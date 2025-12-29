@@ -60,7 +60,7 @@ const Sidebar = () => {
       {/* BOTTOM BUTTON */}
       <div className="p-4">
         <Link 
-          to="/new-appointment"
+          to="/appointments/register"
           className="w-full block bg-cyan-500 text-white py-3 rounded-lg font-semibold hover:bg-cyan-600 text-center transition-colors"
         >
           New Appointment

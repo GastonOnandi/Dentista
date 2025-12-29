@@ -4,11 +4,11 @@ import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
 
 import DashboardPage from './pages/DashboardPage';
-import DentalAppPage from './pages/DentalAppPage';
+import CalendarPage from './pages/CalendarPage';
 import PatientsPage from './pages/PatientsPage';
 import ReportsPage from './pages/ReportsPage';
 import RegisterPatientPage from './pages/RegisterPatientPage';
-
+import RegisterAppointmentPage from './pages/RegisterAppointmentPage';
 
 function App() {
   return (
@@ -23,16 +23,14 @@ function App() {
 
         {/* APP NORMAL → header, sin sidebar */}
         <Route element={<MainLayout />}>
-          <Route path="/calendario" element={<DentalAppPage />} />
+          <Route path="/calendario" element={<CalendarPage />} />
           <Route path="/patients" element={<PatientsPage />} />
           <Route path="/reports" element={<ReportsPage />} />
         </Route>
 
-        {/* Pantalla especial */}
-        <Route
-          path="/patients/register"
-          element={<RegisterPatientPage />}
-        />
+        {/* Pantallas especiales (sin layout) */}
+        <Route path="/patients/register" element={<RegisterPatientPage />} />
+        <Route path="/appointments/register" element={<RegisterAppointmentPage />} />
 
       </Routes>
     </BrowserRouter>
