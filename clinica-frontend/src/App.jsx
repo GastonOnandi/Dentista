@@ -28,7 +28,7 @@ function App() {
           
           {/* IMPORTANTE: Las rutas específicas van ANTES de las dinámicas */}
           <Route path="/patients/register" element={<RegisterPatientPage />} />
-          <Route path="/patients/:id" element={<PatientDetailPage />} />
+          <Route path="/patients/:idCliente" element={<PatientDetailPage />} />
           
           <Route path="/reports" element={<ReportsPage />} />
           
