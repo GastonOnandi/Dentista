@@ -1,88 +1,75 @@
-import React, { useState } from 'react';
-import { Search, Plus, ChevronRight, User } from 'lucide-react';
-import Button from '../components/ui/Button';
-import InfoField from '../components/InfoField';
+import { useNavigate } from 'react-router-dom';
+import InfoField from './InfoField';
 
 const PatientDetails = ({ patient }) => {
-  const [activeTab, setActiveTab] = useState('contact');
-  
+  const navigate = useNavigate();
+
   if (!patient) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-white">
-        <p className="text-gray-400 text-xl">Select a patient to view details</p>
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
+        <p className="text-gray-400">Select a patient to view details</p>
       </div>
     );
   }
-  
+
   return (
     <div className="flex-1 bg-white p-8">
-      <div className="max-w-4xl">
-        <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
+            {patient.avatar ? (
+              <img src={patient.avatar} alt={patient.name} className="w-20 h-20 rounded-full" />
+            ) : (
+              <span className="text-3xl text-gray-400">👤</span>
+            )}
+          </div>
           <div>
-            <h2 className="text-3xl font-bold text-gray-800">{patient.name}</h2>
-            <p className="text-gray-500 mt-1">Last Visit: {patient.lastVisit}</p>
-          </div>
-          
-          <div className="flex gap-3">
-            <Button variant="secondary">Edit</Button>
-            <Button>Save</Button>
+            <h2 className="text-2xl font-semibold text-gray-900">{patient.name}</h2>
+            <p className="text-sm text-gray-500">Last Visit: {patient.lastVisit}</p>
           </div>
         </div>
-        
-        <div className="border-b border-gray-200 mb-8">
-          <div className="flex gap-8">
-            <button
-              onClick={() => setActiveTab('contact')}
-              className={`pb-4 font-medium transition-colors relative ${
-                activeTab === 'contact' ? 'text-blue-500' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Contact Info
-              {activeTab === 'contact' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500" />
-              )}
-            </button>
-            <button
-              onClick={() => setActiveTab('medical')}
-              className={`pb-4 font-medium transition-colors ${
-                activeTab === 'medical' ? 'text-blue-500' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Medical History
-            </button>
-            <button
-              onClick={() => setActiveTab('appointment')}
-              className={`pb-4 font-medium transition-colors ${
-                activeTab === 'appointment' ? 'text-blue-500' : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Appointment History
-            </button>
-          </div>
+        <div className="flex gap-3">
+          <button className="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">
+            Edit
+          </button>
+          <button className="px-6 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600">
+            Save
+          </button>
         </div>
-        
-        {activeTab === 'contact' && (
-          <div className="grid grid-cols-2 gap-x-12">
-            <InfoField label="Address" value={patient.address} />
-            <InfoField label="Phone Number" value={patient.phone} />
-            <InfoField label="Email Address" value={patient.email} />
-            <InfoField label="Emergency Contact" value={patient.emergency} />
-          </div>
-        )}
-        
-        {activeTab === 'medical' && (
-          <div className="text-gray-500">
-            Medical history information would go here...
-          </div>
-        )}
-        
-        {activeTab === 'appointment' && (
-          <div className="text-gray-500">
-            Appointment history would go here...
-          </div>
-        )}
+      </div>
+
+      {/* Tabs */}
+      <div className="border-b border-gray-200 mb-8">
+        <div className="flex gap-8">
+          <button className="pb-4 border-b-2 border-cyan-500 text-cyan-500 font-medium">
+            Contact Info
+          </button>
+          <button className="pb-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+            Medical History
+          </button>
+          <button 
+            className="pb-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700"
+            onClick={() => navigate(`/patients/${patient.id}`)}
+          >
+            Appointment History
+          </button>
+        </div>
+      </div>
+
+      {/* Contact Info */}
+      <div className="space-y-6">
+        <div className="grid grid-cols-2 gap-6">
+          <InfoField label="Address" value={patient.address} />
+          <InfoField label="Phone Number" value={patient.phone} />
+        </div>
+        <div className="grid grid-cols-2 gap-6">
+          <InfoField label="Email Address" value={patient.email} />
+          <InfoField label="Emergency Contact" value={patient.emergency} />
+        </div>
       </div>
     </div>
   );
 };
+
 export default PatientDetails;
