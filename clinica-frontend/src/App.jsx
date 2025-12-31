@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'; 
 
 import DashboardLayout from './layouts/DashboardLayout';
 import MainLayout from './layouts/MainLayout';
@@ -24,15 +24,14 @@ function App() {
         {/* APP NORMAL → header, sin sidebar del dashboard */}
         <Route element={<MainLayout />}>
           <Route path="/calendario" element={<CalendarPage />} />
-          <Route path="/patients" element={<PatientsPage />} />
-          
+          <Route path="/patients" element={<Navigate to="/patients/1" replace />} />
+
           {/* IMPORTANTE: Las rutas específicas van ANTES de las dinámicas */}
           <Route path="/patients/register" element={<RegisterPatientPage />} />
           <Route path="/patients/:idCliente" element={<PatientDetailPage />} />
-          
+
           <Route path="/reports" element={<ReportsPage />} />
-          
-          {/* Appointments register también dentro del layout */}
+
           <Route path="/appointments/register" element={<RegisterAppointmentPage />} />
         </Route>
       </Routes>

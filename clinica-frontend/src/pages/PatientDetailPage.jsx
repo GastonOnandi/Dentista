@@ -10,8 +10,8 @@ const PatientDetailPage = () => {
 
   const [patientInfo, setPatientInfo] = useState(null);
   const [appointments, setAppointments] = useState([]);
-  const [patients, setPatients] = useState([]); // cuando tengas API de pacientes, cargar acá
-  const [activeTab, setActiveTab] = useState("appointment");
+  const [patients, setPatients] = useState([]); 
+  const [activeTab, setActiveTab] = useState("appointment"); // 👈 por defecto
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -105,6 +105,19 @@ const PatientDetailPage = () => {
         {/* === Tabs === */}
         <div className="border-b border-gray-200 px-8">
           <nav className="flex gap-8">
+
+            {/* 🟦 Appointment History primero */}
+            <button
+              onClick={() => setActiveTab("appointment")}
+              className={`py-4 text-sm font-medium transition-colors ${
+                activeTab === "appointment"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Appointment History
+            </button>
+
             <button
               onClick={() => setActiveTab("contact")}
               className={`py-4 text-sm font-medium transition-colors ${
@@ -116,25 +129,15 @@ const PatientDetailPage = () => {
               Info
             </button>
 
-            <button
-              onClick={() => setActiveTab("appointment")}
-              className={`py-4 text-sm font-medium transition-colors ${
-                activeTab === "appointment"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              Appointment History
-            </button>
           </nav>
         </div>
 
         {/* === Contenido === */}
         <div className="px-8 py-6">
-          {activeTab === "contact" && <ContactInfo patient={patientInfo} />}
           {activeTab === "appointment" && (
             <AppointmentHistoryTable appointments={appointments} />
           )}
+          {activeTab === "contact" && <ContactInfo patient={patientInfo} />}
         </div>
       </main>
     </div>

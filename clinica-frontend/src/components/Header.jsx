@@ -7,21 +7,21 @@ const Header = () => {
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
         
-        {/* Logo → ahora clickeable */}
+        {/* Logo → clickeable */}
         <Link to="/" className="flex items-center gap-3 cursor-pointer">
           <div className="bg-blue-500 p-2 rounded-lg">
             <Plus className="text-white" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">
-            DentalCare
+            SmileCare
           </h1>
         </Link>
 
         {/* Navegación */}
         <nav className="flex items-center gap-8">
-          <NavItem to="/appointments" label="Appointments" />
+          <NavItem to="/calendario" label="Calendar" />
+          <NavItem to="/patients" label="Patients" />
           <NavItem to="/reports" label="Reports" />
-          <NavItem to="/settings" label="Settings" />
         </nav>
 
         {/* Usuario */}

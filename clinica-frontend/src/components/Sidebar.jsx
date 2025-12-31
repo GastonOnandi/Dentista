@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Users, BarChart3, Settings, LayoutDashboard, Shield } from 'lucide-react';
+import { Calendar, Users, BarChart3, LayoutDashboard, Shield } from 'lucide-react';
 
 // ==========================================
 // COMPONENTE: Sidebar
-// Para crear archivo separado: src/components/Sidebar.jsx
+// src/components/Sidebar.jsx
 // ==========================================
 const Sidebar = () => {
   return (
@@ -47,14 +47,9 @@ const Sidebar = () => {
           <BarChart3 className="w-5 h-5" />
           Reports
         </Link>
-        
-        <Link 
-          to="/settings"
-          className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
-        >
-          <Settings className="w-5 h-5" />
-          Settings
-        </Link>
+
+        {/* 👇 ELIMINADO Settings */}
+        {/* <Link ...> */}
       </nav>
 
       {/* BOTTOM BUTTON */}
@@ -69,12 +64,5 @@ const Sidebar = () => {
     </div>
   );
 };
+
 export default Sidebar;
-
-
-
-
-
-
-
-

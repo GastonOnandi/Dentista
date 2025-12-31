@@ -6,14 +6,12 @@ import ViewSelector from "../components/ViewSelector";
 import CalendarGridDay from "../components/CalendarGridDay";
 import CalendarGridWeek from "../components/CalendarGridWeek";
 import CalendarGridMonth from "../components/CalendarGridMonth";
-import StaffFilter from "../components/StaffFilter";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CalendarPage = () => {
   const [currentDate, setCurrentDate] = useState(moment());
   const [activeView, setActiveView] = useState("Week");
-  const [selectedStaff, setSelectedStaff] = useState("All Staff");
   const [appointments, setAppointments] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +36,7 @@ const CalendarPage = () => {
 
     fetch(`http://localhost:8080/api/turnos/fechas?inicio=${inicio}&fin=${fin}`)
       .then(res => {
-        if (!res.ok) throw new Error('Error loading appointments');
+        if (!res.ok) throw new Error("Error loading appointments");
         return res.json();
       })
       .then(data => {
@@ -131,12 +129,7 @@ const CalendarPage = () => {
       </div>
 
       {/* Controles */}
-      <div className="flex items-center justify-between">
-        <StaffFilter
-          selectedStaff={selectedStaff}
-          onStaffChange={setSelectedStaff}
-        />
-        
+      <div className="flex items-center justify-end">
         <ViewSelector activeView={activeView} onViewChange={setActiveView} />
       </div>
 
