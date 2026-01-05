@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import axios from 'axios';
 
-// Importar componentes
 import PatientSearchInput from '../components/PatientSearchInput';
 import TreatmentTypeSelect from '../components/TreatmentTypeSelect';
 import DateInput from '../components/DateInput';
@@ -13,12 +12,11 @@ const API_URL = 'http://localhost:8080/api';
 
 const RegisterAppointmentPage = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  
+
   const [patients, setPatients] = useState([]);
   const [treatments, setTreatments] = useState([]);
-  const [slotsAvailable, setSlotsAvailable] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
     patientId: null,
@@ -26,209 +24,138 @@ const RegisterAppointmentPage = () => {
     treatmentId: '',
     date: '',
     startTime: '09:00',
-    endTime: '10:00'
+    endTime: '10:00',
   });
 
-  // Cargar pacientes y tratamientos al montar
   useEffect(() => {
-    fetchPatients();
-    fetchTreatments();
+    axios.get(`${API_URL}/cliente/mostrar`).then(r => setPatients(r.data));
+    axios.get(`${API_URL}/tratamiento/listar`).then(r => setTreatments(r.data));
   }, []);
 
-  // Verificar slots disponibles cuando cambia la fecha
-  useEffect(() => {
-    if (formData.date) {
-      checkAvailableSlots(formData.date);
-    }
-  }, [formData.date]);
-
-  const fetchPatients = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/clientes`);
-      setPatients(response.data);
-    } catch (err) {
-      console.error('Error loading patients:', err);
-    }
-  };
-
-  const fetchTreatments = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/tratamientos`);
-      setTreatments(response.data);
-    } catch (err) {
-      console.error('Error loading treatments:', err);
-    }
-  };
-
-  const checkAvailableSlots = async (date) => {
-    try {
-      const response = await axios.get(`${API_URL}/turnos/disponibles`, {
-        params: { fecha: date }
-      });
-      setSlotsAvailable(response.data.disponibles || 0);
-    } catch (err) {
-      console.error('Error checking slots:', err);
-      setSlotsAvailable(0);
-    }
-  };
-
   const handleSelectPatient = (patient) => {
-    setFormData({
-      ...formData,
-      patientId: patient.id,
-      patientName: `${patient.nombre} ${patient.apellido}`
-    });
+    setFormData(prev => ({
+      ...prev,
+      patientId: patient.cedula,
+      patientName: patient.nombre,
+    }));
   };
 
   const handleSubmit = async () => {
-    setLoading(true);
     setError(null);
 
-    // Validaciones
     if (!formData.patientId) {
-      setError('Please select a patient');
-      setLoading(false);
-      return;
+      return setError('Select a patient from the list');
     }
 
     if (!formData.treatmentId) {
-      setError('Please select a treatment type');
-      setLoading(false);
-      return;
+      return setError('Select a treatment');
     }
 
     if (!formData.date) {
-      setError('Please select a date');
-      setLoading(false);
-      return;
+      return setError('Select a date');
     }
 
-    if (formData.startTime >= formData.endTime) {
-      setError('End time must be after start time');
-      setLoading(false);
-      return;
-    }
+    const payload = {
+      idCliente: formData.patientId,
+      idTratamiento: formData.treatmentId,
+      fecha: formData.date, // ← Enviar directamente en formato yyyy-MM-dd
+      horaInicio: formData.startTime,
+      horaFin: formData.endTime,
+    };
+
+    console.log('📤 Payload being sent:', payload);
 
     try {
-      const appointmentData = {
-        idCliente: formData.patientId,
-        idTratamiento: formData.treatmentId,
-        fecha: formData.date,
-        horaInicio: formData.startTime,
-        horaFin: formData.endTime,
-        estado: 'Pendiente'
-      };
-
-      await axios.post(`${API_URL}/turnos`, appointmentData);
-      
+      setLoading(true);
+      const response = await axios.post(`${API_URL}/turno/agendar`, payload);
+      console.log('✅ Response:', response.data);
       alert('Appointment scheduled successfully!');
       navigate('/appointments');
+    } catch (e) {
+      console.error('❌ Error completo:', e);
+      console.error('❌ Error response data:', e.response?.data);
       
-    } catch (err) {
-      setError(err.response?.data?.message || 'Error scheduling appointment');
+      const errorMessage = e.response?.data?.message || 
+                          e.response?.data?.error || 
+                          'Error scheduling appointment';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCancel = () => {
-    navigate('/');
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Register New Appointment</h1>
-            <p className="text-sm text-gray-600 mt-1">Fill in the details to schedule a new visit.</p>
-          </div>
-          <button
-            onClick={handleCancel}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
+      <div className="bg-white rounded-lg shadow w-full max-w-2xl">
+        <div className="flex justify-between items-center p-6 border-b">
+          <h1 className="text-xl font-bold">Register Appointment</h1>
+          <button 
+            onClick={() => navigate('/')}
+            className="text-gray-500 hover:text-gray-700 transition-colors"
           >
-            <X className="w-6 h-6" />
+            <X />
           </button>
         </div>
 
-        {/* Error Alert */}
         {error && (
-          <div className="mx-6 mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="m-6 bg-red-50 border border-red-200 p-4 rounded text-red-600">
+            {error}
           </div>
         )}
 
-        {/* Form */}
-        <div className="p-6">
-          <div className="space-y-6">
-            {/* Patient Search */}
-            <PatientSearchInput
-              value={formData.patientName}
-              onChange={(value) => setFormData({ ...formData, patientName: value, patientId: null })}
-              patients={patients}
-              onSelectPatient={handleSelectPatient}
-            />
+        <div className="p-6 space-y-6">
+          <PatientSearchInput
+            value={formData.patientName}
+            patients={patients}
+            onSelectPatient={handleSelectPatient}
+          />
 
-            {/* Treatment Type */}
-            <TreatmentTypeSelect
-              value={formData.treatmentId}
-              onChange={(value) => setFormData({ ...formData, treatmentId: value })}
-              treatments={treatments}
-            />
+          <TreatmentTypeSelect
+            value={formData.treatmentId}
+            treatments={treatments}
+            onChange={(v) =>
+              setFormData(prev => ({ ...prev, treatmentId: v }))
+            }
+          />
 
-            {/* Date */}
-            <DateInput
-              value={formData.date}
-              onChange={(value) => setFormData({ ...formData, date: value })}
-              slotsAvailable={slotsAvailable}
-            />
+          <DateInput
+            value={formData.date}
+            onChange={(v) =>
+              setFormData(prev => ({ ...prev, date: v }))
+            }
+          />
 
-            {/* Time Range */}
-            <div className="grid grid-cols-2 gap-4">
-              <TimeInput
-                label="Start Time"
-                value={formData.startTime}
-                onChange={(value) => setFormData({ ...formData, startTime: value })}
-              />
-              <TimeInput
-                label="Estimated End Time"
-                value={formData.endTime}
-                onChange={(value) => setFormData({ ...formData, endTime: value })}
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-4">
+            <TimeInput
+              label="Start Time"
+              value={formData.startTime}
+              onChange={(v) =>
+                setFormData(prev => ({ ...prev, startTime: v }))
+              }
+            />
+            <TimeInput
+              label="End Time"
+              value={formData.endTime}
+              onChange={(v) =>
+                setFormData(prev => ({ ...prev, endTime: v }))
+              }
+            />
           </div>
 
-          {/* Footer */}
-          <div className="flex items-center justify-end mt-8 pt-6 border-t">
-            <div className="flex gap-3">
-              <button
-                onClick={handleCancel}
-                disabled={loading}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="px-6 py-3 bg-cyan-400 text-white rounded-lg font-medium hover:bg-cyan-500 transition-colors flex items-center gap-2 disabled:opacity-50"
-              >
-                {loading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Scheduling...
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Schedule Appointment
-                  </>
-                )}
-              </button>
-            </div>
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <button
+              onClick={() => navigate('/')}
+              className="px-6 py-3 border rounded hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="px-6 py-3 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Saving...' : 'Schedule'}
+            </button>
           </div>
         </div>
       </div>

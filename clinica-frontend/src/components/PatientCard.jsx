@@ -13,15 +13,15 @@ const PatientCard = ({ patient, isActive, onClick }) => {
         patient.avatar ? '' : 'bg-gray-300'
       }`}>
         {patient.avatar ? (
-          <img src={patient.avatar} alt={patient.name} className="w-full h-full rounded-full object-cover" />
+          <img src={patient.avatar} alt={patient.nombre} className="w-full h-full rounded-full object-cover" />
         ) : (
           <User className="text-gray-600" size={28} />
         )}
       </div>
       
       <div className="flex-1">
-        <h3 className="font-semibold text-gray-800">{patient.name}</h3>
-        <p className="text-sm text-gray-500">ID: {patient.id}</p>
+        <h3 className="font-semibold text-gray-800">{patient.nombre}</h3>
+        <p className="text-sm text-gray-500">ID: {patient.cedula}</p>
       </div>
       
       <ChevronRight className="text-gray-400" size={20} />

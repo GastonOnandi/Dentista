@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/turno")
@@ -48,10 +49,22 @@ public class TurnoController {
     }
 
     @GetMapping("/fechas")
-    public ResponseEntity<List<TurnoResponseDTO>> obtenerPorFechas(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin) {
-        RangoDeFechas rangoDeFechas = new RangoDeFechas(inicio, fin);
-        List<TurnoResponseDTO> turnos = turnoService.obtenerPorFechas(rangoDeFechas);
-        return ResponseEntity.ok(turnos);
+    public ResponseEntity<?> obtenerPorFechas(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fin
+    ) {
+        try {
+            RangoDeFechas rangoDeFechas = new RangoDeFechas(inicio, fin);
+            List<TurnoResponseDTO> turnos = turnoService.obtenerPorFechas(rangoDeFechas);
+            return ResponseEntity.ok(turnos);
+        } catch (Exception e) {
+            e.printStackTrace(); // Esto mostrará el error en la consola
+            return ResponseEntity.status(500).body(Map.of(
+                    "error", e.getMessage(),
+                    "type", e.getClass().getName(),
+                    "cause", e.getCause() != null ? e.getCause().getMessage() : "No cause"
+            ));
+        }
     }
 
     @GetMapping("/existe")

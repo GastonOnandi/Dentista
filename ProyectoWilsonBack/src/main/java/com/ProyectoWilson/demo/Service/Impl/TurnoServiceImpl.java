@@ -5,11 +5,14 @@ import com.ProyectoWilson.demo.DTO.Request.TurnoRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnosPorDia;
 import com.ProyectoWilson.demo.Entities.Cliente;
+import com.ProyectoWilson.demo.Entities.Tratamiento;
 import com.ProyectoWilson.demo.Entities.Turno;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
+import com.ProyectoWilson.demo.Exceptions.Tratamiento.TratamientoNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Turno.TurnoNoExiste;
 import com.ProyectoWilson.demo.Mapper.TurnoMapper;
 import com.ProyectoWilson.demo.Repository.ClienteRepository;
+import com.ProyectoWilson.demo.Repository.TratamientoRepository;
 import com.ProyectoWilson.demo.Repository.TurnoRepository;
 import com.ProyectoWilson.demo.Service.Interfaces.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +35,36 @@ public class TurnoServiceImpl implements TurnoService {
     @Autowired
     private TurnoRepository turnoRepository;
 
+    @Autowired
+    private TratamientoRepository tratamientoRepository;
+
     @Override
     public TurnoResponseDTO agendarTurno(TurnoRequestDTO dto) {
-        Cliente cliente = clienteRepository.findById(dto.getCedulaCliente()).orElseThrow(ClienteNoExiste::new);
+
+        Cliente cliente = clienteRepository.findById(dto.getIdCliente())
+                .orElseThrow(ClienteNoExiste::new);
+
+        Tratamiento tratamiento = tratamientoRepository.findById(dto.getIdTratamiento())
+                .orElseThrow(TratamientoNoExiste::new);
+
         Turno turno = new Turno();
         turno.setFecha(dto.getFecha());
+        turno.setHoraInicio(dto.getHoraInicio());
+        turno.setHoraFin(dto.getHoraFin());
         turno.setClienteAsociado(cliente);
+        turno.setTratamientoAsociado(tratamiento);
+
         turnoRepository.save(turno);
+
         cliente.getTurnos().add(turno);
+
         return turnoMapper.toResponseDTO(turno);
     }
 
     @Override
     public void reprogramarTurno(Long idTurno, TurnoRequestDTO dto) {
         Turno turno = turnoRepository.findById(idTurno).orElseThrow(TurnoNoExiste::new);
-        turno.setClienteAsociado(clienteRepository.findById(dto.getCedulaCliente()).orElseThrow(ClienteNoExiste::new));
+        turno.setClienteAsociado(clienteRepository.findById(dto.getIdCliente()).orElseThrow(ClienteNoExiste::new));
         turno.setFecha(dto.getFecha());
         turno.setHoraInicio(dto.getHoraInicio());
         turno.setHoraFin(dto.getHoraFin());

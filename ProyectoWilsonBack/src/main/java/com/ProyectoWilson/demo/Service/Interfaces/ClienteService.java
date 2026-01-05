@@ -1,9 +1,13 @@
 package com.ProyectoWilson.demo.Service.Interfaces;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
+import com.ProyectoWilson.demo.Entities.Cliente;
+import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,8 +19,10 @@ public interface ClienteService {
     List<ClienteResponseDTO> mostrarClientes();
     void pagarTratamiento(Long idCliente,Long idTratamiento ,Long monto);
     List<DeudaTratamientoDTO> obtenerDeudaTratamientos(Long idCliente);
-    void agregarConsideracion(String tipo, String detalle, Long idCliente);
-    void editarConsideracion(String tipo, String detalle, Long idConsideracion);
+    void agregarConsideracion(TipoConsideracion tipo, String detalle, Long idCliente);
+    void editarConsideracion(TipoConsideracion tipo, String detalle, Long idConsideracion);
     void eliminarConsideracion(Long idCliente, Long idConsideracion);
     List<TurnoResponseDTO> citasPorCliente(Long idCliente);
+    ClienteInfoResponseDTO obtenerInfoPorId(Long idCliente);
+    List<ClienteResponseDTO> buscarClientes(String q);
 }

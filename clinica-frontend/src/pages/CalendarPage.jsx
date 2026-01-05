@@ -34,7 +34,7 @@ const CalendarPage = () => {
       fin = currentDate.clone().endOf("month").format("YYYY-MM-DD");
     }
 
-    fetch(`http://localhost:8080/api/turnos/fechas?inicio=${inicio}&fin=${fin}`)
+    fetch(`http://localhost:8080/api/turno/fechas?inicio=${inicio}&fin=${fin}`)
       .then(res => {
         if (!res.ok) throw new Error("Error loading appointments");
         return res.json();

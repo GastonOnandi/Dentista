@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TratamientoResponseDTO {
     private Long id;
-    private String Nombre;
+    private String nombre;
     private Long costo;
 }

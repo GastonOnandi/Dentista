@@ -17,5 +17,4 @@ public class ClienteResponseDTO {
     private Long telefono;
     private String direccion;
     private Long deuda;
-
 }

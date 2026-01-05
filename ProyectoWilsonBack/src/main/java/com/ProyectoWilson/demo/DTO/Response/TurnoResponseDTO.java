@@ -9,11 +9,11 @@ public record TurnoResponseDTO(
         Long id,
         String nombreCliente,
         String tratamiento,
-        @JsonFormat(pattern = "dd-MM-yyyy")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate fecha,
         @JsonFormat(pattern = "HH:mm")
-        LocalTime horaInicio,
+        String horaInicio,
         @JsonFormat(pattern = "HH:mm")
-        LocalTime horaFin
+        String horaFin
 ) {
 }

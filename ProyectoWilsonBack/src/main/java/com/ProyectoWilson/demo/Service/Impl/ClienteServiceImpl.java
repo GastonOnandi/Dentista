@@ -1,10 +1,12 @@
 package com.ProyectoWilson.demo.Service.Impl;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Cliente;
+import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
 import com.ProyectoWilson.demo.Entities.Turno;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
@@ -94,11 +96,11 @@ public class ClienteServiceImpl implements ClienteService {
 
 
     @Override
-    public void agregarConsideracion(String tipo, String detalle, Long idCliente){
+    public void agregarConsideracion(TipoConsideracion tipo, String detalle, Long idCliente){
         clienteConsideracionService.agregarConsideracion(tipo,detalle,idCliente);
     }
     @Override
-    public void editarConsideracion(String tipo, String detalle, Long idConsideracion){
+    public void editarConsideracion(TipoConsideracion tipo, String detalle, Long idConsideracion){
         clienteConsideracionService.editarConsideracion(tipo,detalle,idConsideracion);
     }
     @Override
@@ -117,7 +119,30 @@ public class ClienteServiceImpl implements ClienteService {
         return retornar;
     }
 
+    @Override
+    public ClienteInfoResponseDTO obtenerInfoPorId(Long idCliente) {
+        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(()-> new ClienteNoExiste());
+        ClienteInfoResponseDTO dto = clienteMapper.toClienteInfoResponseDTO(cliente);
+        return dto;
+    }
 
+
+    @Override
+    public List<ClienteResponseDTO> buscarClientes(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Cliente> clientes = clienteRepository.findByNombreContainingIgnoreCase(query);
+
+        List<ClienteResponseDTO> clientesDTO = new ArrayList<>();
+        for (Cliente cliente : clientes) {
+            ClienteResponseDTO dto = clienteMapper.toResponseDTO(cliente);
+            clientesDTO.add(dto);
+        }
+
+        return clientesDTO;
+    }
 
 
 }

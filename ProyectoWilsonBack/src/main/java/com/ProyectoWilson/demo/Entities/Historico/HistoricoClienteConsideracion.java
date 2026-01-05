@@ -2,6 +2,7 @@ package com.ProyectoWilson.demo.Entities.Historico;
 
 import com.ProyectoWilson.demo.Entities.Cliente;
 import com.ProyectoWilson.demo.Entities.ClienteConsideracion;
+import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,9 +31,9 @@ public class HistoricoClienteConsideracion {
     @Column(nullable = false)
     private String tipoModificacion;
 
-    private String tipoViejo;
+    private TipoConsideracion tipoViejo;
     private String detalleViejo;
 
-    private String tipoNuevo;
+    private TipoConsideracion tipoNuevo;
     private String detalleNuevo;
 }

@@ -24,26 +24,52 @@ public class TurnoMapper {
     public Turno toEntity(TurnoRequestDTO dto){
         Turno turno = new Turno();
         turno.setFecha(dto.getFecha());
-        turno.setClienteAsociado(clienteRepository.findById(dto.getCedulaCliente()).orElseThrow(ClienteNoExiste::new));
+        turno.setHoraInicio(dto.getHoraInicio());
+        turno.setHoraFin(dto.getHoraFin());
+
+        turno.setClienteAsociado(
+                clienteRepository.findById(dto.getIdCliente())
+                        .orElseThrow(ClienteNoExiste::new)
+        );
+
         return turno;
     }
 
-    public TurnoResponseDTO toResponseDTO(Turno turno){
-        return new TurnoResponseDTO(turno.getId(),turno.getClienteAsociado().getNombre(),turno.getTratamientoAsociado().getNombre(),turno.getFecha(),turno.getHoraInicio(),turno.getHoraFin() );
+    public TurnoResponseDTO toResponseDTO(Turno turno) {
+        return new TurnoResponseDTO(
+                turno.getId(),
+                turno.getClienteAsociado() != null ? turno.getClienteAsociado().getNombre() : null,
+                turno.getTratamientoAsociado() != null ? turno.getTratamientoAsociado().getNombre() : null,
+                turno.getFecha(),
+                turno.getHoraInicio(),
+                turno.getHoraFin()
+        );
     }
 
     public TurnoItemDTO toItemDTO(Turno turno) {
-        String nombre = turno.getClienteAsociado().getNombre();
+
+        String nombre = turno.getClienteAsociado() != null
+                ? turno.getClienteAsociado().getNombre()
+                : "Sin cliente";
+
         String iniciales = generarIniciales(nombre);
-        String hora = turno.getHoraInicio().toString();
+
+        String hora = turno.getHoraInicio() != null
+                ? turno.getHoraInicio().toString()
+                : "--:--";
+
+        String tratamiento = turno.getTratamientoAsociado() != null
+                ? turno.getTratamientoAsociado().getNombre()
+                : "Sin tratamiento";
 
         return new TurnoItemDTO(
                 iniciales,
                 nombre,
                 hora,
-                turno.getTratamientoAsociado().getNombre()
+                tratamiento
         );
     }
+
 
 
     public List<TurnosPorDia> agruparPorDia(List<Turno> turnos) {

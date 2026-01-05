@@ -11,6 +11,7 @@ import com.ProyectoWilson.demo.Service.Interfaces.TratamientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,12 +35,16 @@ public class TratamientoServiceImpl implements TratamientoService {
 
     @Override
     public List<TratamientoResponseDTO> listarTratamientos() {
-        List<Tratamiento> tratamientos = tratamientoRepository.findAll();
+
+        List<Tratamiento> tratamientos = tratamientoRepository.findAllNative();
+
+
         List<TratamientoResponseDTO> retornar = new ArrayList<>();
         for (Tratamiento tratamiento: tratamientos){
-            TratamientoResponseDTO dto=tratamientoMapper.toResponseDTO(tratamiento);
+            TratamientoResponseDTO dto = tratamientoMapper.toResponseDTO(tratamiento);
             retornar.add(dto);
         }
+
         return retornar;
     }
 

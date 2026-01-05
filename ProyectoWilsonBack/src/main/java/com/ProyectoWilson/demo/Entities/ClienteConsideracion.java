@@ -1,5 +1,6 @@
 package com.ProyectoWilson.demo.Entities;
 
+import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
 import com.ProyectoWilson.demo.Entities.Historico.HistoricoCliente;
 import com.ProyectoWilson.demo.Entities.Historico.HistoricoClienteConsideracion;
 import jakarta.persistence.*;
@@ -21,7 +22,7 @@ public class ClienteConsideracion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String tipo; // "ALERGIA", "MEDICAMENTO", "ANTECEDENTE"
+    private TipoConsideracion tipo; // "ALERGIA", "MEDICAMENTO"
     private String detalle;
 
     @ManyToOne(optional = false)

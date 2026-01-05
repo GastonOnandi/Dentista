@@ -24,11 +24,11 @@ function App() {
         {/* APP NORMAL → header, sin sidebar del dashboard */}
         <Route element={<MainLayout />}>
           <Route path="/calendario" element={<CalendarPage />} />
-          <Route path="/patients" element={<Navigate to="/patients/1" replace />} />
+          <Route path="/patients" element={<Navigate to="/patients/12345" replace />} />
 
           {/* IMPORTANTE: Las rutas específicas van ANTES de las dinámicas */}
           <Route path="/patients/register" element={<RegisterPatientPage />} />
-          <Route path="/patients/:idCliente" element={<PatientDetailPage />} />
+          <Route path="/patients/:cedula" element={<PatientDetailPage />} />
 
           <Route path="/reports" element={<ReportsPage />} />
 

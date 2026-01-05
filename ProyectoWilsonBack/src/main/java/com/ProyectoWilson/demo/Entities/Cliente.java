@@ -21,6 +21,7 @@ public class Cliente {
     private String nombre;
     private Long telefono;
     private String direccion;
+    private String avatarUrl;
     private Long deuda;
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ClienteTratamiento> tratamientos = new ArrayList<>();

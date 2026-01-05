@@ -19,7 +19,12 @@ const DashboardPage = () => {
             Welcome, Dr. Smile!
           </h1>
           <p className="text-gray-500 mt-1">
-            Monday, October 26, 2023
+            {new Date().toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
           </p>
         </div>
 

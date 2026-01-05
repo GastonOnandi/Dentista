@@ -15,12 +15,12 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TurnoRequestDTO {
-    private Long cedulaCliente;
-    public String tratamiento;
-    @JsonFormat(pattern = "dd-MM-yyyy")
+    private Long idCliente;
+    public Long idTratamiento;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fecha;
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime horaInicio;
+    private String horaInicio;
     @JsonFormat(pattern = "HH:mm")
-    private LocalTime horaFin;
+    private String horaFin;
 }

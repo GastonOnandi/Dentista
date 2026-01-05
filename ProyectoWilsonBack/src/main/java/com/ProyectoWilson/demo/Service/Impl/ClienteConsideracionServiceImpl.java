@@ -2,6 +2,7 @@ package com.ProyectoWilson.demo.Service.Impl;
 
 import com.ProyectoWilson.demo.Entities.Cliente;
 import com.ProyectoWilson.demo.Entities.ClienteConsideracion;
+import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.ClienteConsideracion.ClienteConsideracionNoExiste;
 import com.ProyectoWilson.demo.Repository.ClienteConsideracionRepository;
@@ -24,7 +25,7 @@ public class ClienteConsideracionServiceImpl implements ClienteConsideracionServ
     private HistoricoClienteConsideracionService hClienteConsideracionService;
 
     @Override
-    public void agregarConsideracion(String tipo, String detalle, Long idCliente) {
+    public void agregarConsideracion(TipoConsideracion tipo, String detalle, Long idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNoExiste::new);
         ClienteConsideracion clienteConsideracion = new ClienteConsideracion();
         clienteConsideracion.setTipo(tipo);
@@ -36,7 +37,7 @@ public class ClienteConsideracionServiceImpl implements ClienteConsideracionServ
     }
 
     @Override
-    public void editarConsideracion(String tipo, String detalle, Long idConsideracion) {
+    public void editarConsideracion(TipoConsideracion tipo, String detalle, Long idConsideracion) {
         ClienteConsideracion clienteConsideracionVieja = clienteConsideracionRepository.findById(idConsideracion).orElseThrow(ClienteConsideracionNoExiste::new);
         ClienteConsideracion clienteConsideracion = clienteConsideracionRepository.findById(idConsideracion).orElseThrow(ClienteConsideracionNoExiste::new);
         clienteConsideracion.setTipo(tipo);

@@ -2,9 +2,11 @@ package com.ProyectoWilson.demo.Controller;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteConsideracionRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
+import com.ProyectoWilson.demo.Entities.Cliente;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,6 @@ public class ClienteController {
         return ResponseEntity.ok(detalles);
     }
 
-
     @PostMapping("/agregar/{idCliente}")
     public ResponseEntity<String> agregarConsideracion(@RequestBody ClienteConsideracionRequestDTO dto, @PathVariable Long idCliente) {
         clienteService.agregarConsideracion(dto.getTipo(), dto.getDetalle(), idCliente);
@@ -75,9 +76,25 @@ public class ClienteController {
         return ResponseEntity.ok("Consideración eliminada exitosamente");
     }
 
-    @GetMapping("/cliente/{idCliente}")
-    public ResponseEntity<List<TurnoResponseDTO>> obtenerTurnosPorCliente(@PathVariable Long idCliente) {
-        List<TurnoResponseDTO> citas = clienteService.citasPorCliente(idCliente);
+    @GetMapping("/{cedula}/turnos")
+    public ResponseEntity<List<TurnoResponseDTO>> obtenerTurnosPorCliente(@PathVariable Long cedula) {
+        List<TurnoResponseDTO> citas = clienteService.citasPorCliente(cedula);
         return ResponseEntity.ok(citas);
+    }
+
+    @GetMapping("/{cedula}/info")
+    public ResponseEntity<ClienteInfoResponseDTO> obtenerInfoPorId(@PathVariable Long cedula){
+        return ResponseEntity.ok(clienteService.obtenerInfoPorId(cedula));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ClienteResponseDTO>> buscarClientes(@RequestParam String q) {
+        try {
+            List<ClienteResponseDTO> clientes = clienteService.buscarClientes(q);
+            return ResponseEntity.ok(clientes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
