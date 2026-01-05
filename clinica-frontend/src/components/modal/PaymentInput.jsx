@@ -1,34 +1,42 @@
-// src/components/modal/PaymentInput.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const PaymentInput = ({ value, onChange }) => {
-  const [touched, setTouched] = useState(false);
+const PaymentInput = ({ value, onChange, max }) => {
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (Number.isFinite(value) && value > 0) {
+      setInputValue(String(value));
+    } else {
+      setInputValue("");
+    }
+  }, [value]);
 
   const handleChange = (e) => {
-    const inputValue = e.target.value;
+    const val = e.target.value;
+    setInputValue(val);
 
-    // Cuando borra, dejamos string vacío (placeholder visible)
-    if (inputValue === "") {
-      setTouched(false);
+    if (val === "") {
       onChange(0);
       return;
     }
 
-    setTouched(true);
-    onChange(Number(inputValue));
+    const num = Number(val);
+    if (!Number.isFinite(num)) return;
+    if (max && num > max) return;
+
+    onChange(num);
   };
 
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1">
-        Amount to Pay
+        Monto a pagar
       </label>
       <input
         type="number"
-        value={touched ? value : ""}      // <-- clave: si no tocó, mostrar vacío
+        value={inputValue}
         onChange={handleChange}
-        onFocus={() => setTouched(true)} // <-- al hacer click desaparece el 0
-        placeholder="Enter amount"
+        placeholder="Ingrese monto"
         className="w-full px-3 py-2 border rounded-lg
                    focus:outline-none focus:ring-2 focus:ring-cyan-500
                    [appearance:textfield]
