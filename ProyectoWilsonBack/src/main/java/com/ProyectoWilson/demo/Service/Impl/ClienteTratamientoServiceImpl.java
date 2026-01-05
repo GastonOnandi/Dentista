@@ -46,10 +46,9 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
     }
 
     @Override
-    public void pagarDeuda(Long idCliente, Long idTratamiento, Long monto){
-        Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(ClienteNoExiste::new);
-        Tratamiento tratamiento = tratamientoRepository.findById(idTratamiento).orElseThrow(TratamientoNoExiste::new);
-        ClienteTratamiento clienteTratamiento = clienteTratamientoRepository.findByClienteCedulaAndTratamientoId(idCliente,idTratamiento).orElseThrow(ClienteTratamientoNoExiste::new);
+    public void pagarDeuda(Long idClienteTratamiento, Long monto){
+        ClienteTratamiento clienteTratamiento = clienteTratamientoRepository.findById(idClienteTratamiento).orElseThrow(ClienteTratamientoNoExiste::new);
+        Cliente cliente = clienteTratamiento.getCliente();
         if (clienteTratamiento.getDebe()>= monto){
             clienteTratamiento.setPago(clienteTratamiento.getPago() + monto );
             clienteTratamiento.setDebe(clienteTratamiento.getDebe() - monto);
@@ -76,6 +75,7 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
 
             if (deuda > 0){
                 DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                        ct.getId(),
                         ct.getCliente().getNombre(),
                         ct.getTratamiento().getNombre(),
                         ct.getFecha(),
@@ -98,6 +98,7 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
             Long total = ct.getTratamiento().getCosto();
             Long deuda = total - pago;
             DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                    ct.getId(),
                     ct.getCliente().getNombre(),
                     ct.getTratamiento().getNombre(),
                     ct.getFecha(),
@@ -121,6 +122,7 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
             Long deuda = total - pago;
             if (deuda > 0) {
                 DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                        ct.getId(),
                         ct.getCliente().getNombre(),
                         ct.getTratamiento().getNombre(),
                         ct.getFecha(),
@@ -144,6 +146,7 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
             Long deuda = total - pago;
             if (ct.getEstado() == estado) {
                 DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
+                        ct.getId(),
                         ct.getCliente().getNombre(),
                         ct.getTratamiento().getNombre(),
                         ct.getFecha(),

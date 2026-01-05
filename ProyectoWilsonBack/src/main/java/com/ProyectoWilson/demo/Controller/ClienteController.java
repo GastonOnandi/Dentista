@@ -47,9 +47,9 @@ public class ClienteController {
         List<ClienteResponseDTO> clientes = clienteService.mostrarClientes();
         return ResponseEntity.ok(clientes);
     }
-    @PutMapping("/{idCliente}/tratamientos/{idTratamiento}/pagar")
-    public ResponseEntity<Void> pagarTratamiento(@PathVariable Long idCliente, @PathVariable Long idTratamiento, @RequestBody Long monto) {
-        clienteService.pagarTratamiento(idCliente, idTratamiento, monto);
+    @PutMapping("/clientetratamiento/{id}/pagar")
+    public ResponseEntity<Void> pagarTratamiento(@PathVariable Long id, @RequestBody Long monto) {
+        clienteService.pagarTratamiento(id,monto);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/{idCliente}/tratamientos/deuda")

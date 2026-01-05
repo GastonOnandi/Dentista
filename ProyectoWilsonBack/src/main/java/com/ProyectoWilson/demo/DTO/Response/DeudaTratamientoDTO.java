@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeudaTratamientoDTO {
+    private Long id;
     private String nombrePaciente;
     private String nombreTratamiento;
     private LocalDate fecha;

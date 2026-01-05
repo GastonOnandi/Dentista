@@ -15,7 +15,7 @@ public interface ClienteTratamientoService {
     List<ClienteTratamiento> obtenerPorClienteEnRangoFechas(Long idCliente,LocalDate fechaInicio,LocalDate fechaFin);
     List<ClienteTratamiento> obtenerPorClienteConFechaDesc(Long idCliente);
     void eliminar (Long id);
-    void pagarDeuda(Long idCliente, Long idTratamiento, Long monto);
+    void pagarDeuda(Long idClienteTratamiento ,Long monto);
     List<DeudaTratamientoDTO> obtenerDeudasPorCliente(Long idCliente);
     List<DeudaTratamientoDTO> obtenerTodasLasDeudas();
     public List<DeudaTratamientoDTO> obtenerDeudasPendientes();

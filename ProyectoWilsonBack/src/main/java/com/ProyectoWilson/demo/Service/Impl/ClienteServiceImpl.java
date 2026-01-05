@@ -84,8 +84,8 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public void pagarTratamiento(Long idCliente,Long idTratamiento ,Long monto){
-        clienteTratamientoService.pagarDeuda(idCliente,idTratamiento,monto);
+    public void pagarTratamiento(Long idCliente,Long monto){
+        clienteTratamientoService.pagarDeuda(idCliente,monto);
     }
 
     @Override
