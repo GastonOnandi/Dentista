@@ -130,6 +130,7 @@ const PatientDetailPage = () => {
         activePatient={{ cedula }}
         onSelectPatient={(p) => navigate(`/patients/${p.cedula}`)}
         onAddPatient={() => navigate("/patients/register")}
+        onEditPatient={() => navigate(`/patients/${cedula}/edit`)}
         onSearch={buscarPacientes}
       />
 
@@ -147,7 +148,7 @@ const PatientDetailPage = () => {
           <div>
             <h1 className="text-2xl font-semibold">{patientInfo.nombre}</h1>
             <p className="text-sm text-gray-500">
-              Last Visit: {patientInfo.ultimaVisita ?? "Nunca"}
+              Ultimas visitas: {patientInfo.ultimaVisita ?? "Nunca"}
             </p>
           </div>
         </div>
@@ -163,7 +164,7 @@ const PatientDetailPage = () => {
                   : "text-gray-600"
               }`}
             >
-              Appointment History
+              Historial de citas
             </button>
             <button
               onClick={() => setActiveTab("contact")}
