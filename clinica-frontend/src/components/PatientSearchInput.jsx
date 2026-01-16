@@ -29,7 +29,7 @@ const PatientSearchInput = ({ value, patients, onSelectPatient }) => {
   return (
     <div className="relative">
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        Patient
+        Paciente
       </label>
 
       <div className="relative">
@@ -38,7 +38,7 @@ const PatientSearchInput = ({ value, patients, onSelectPatient }) => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search patient"
+          placeholder="Buscar paciente"
           className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-cyan-400 focus:outline-none"
         />
       </div>

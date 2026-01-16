@@ -33,7 +33,7 @@ const TodaySchedule = () => {
   if (loading) {
     return (
       <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Agenda del día</h2>
         <p className="text-gray-500">Loading...</p>
       </div>
     );
@@ -42,7 +42,7 @@ const TodaySchedule = () => {
   if (error) {
     return (
       <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Agenda del día</h2>
         <p className="text-red-500">Error: {error}</p>
       </div>
     );
@@ -50,10 +50,10 @@ const TodaySchedule = () => {
 
   return (
     <div className="col-span-2 bg-white rounded-xl p-6 border border-gray-200">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Today's Schedule</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-6">Agenda del día</h2>
       <div className="space-y-4">
         {appointments.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">No appointments scheduled for today</p>
+          <p className="text-gray-500 text-center py-8">No hay citas para el día de hoy</p>
         ) : (
           appointments.map((appointment, index) => (
             <div key={appointment.id || index} className="flex items-center gap-4 pb-4 border-b border-gray-100 last:border-0 last:pb-0">

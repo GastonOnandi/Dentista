@@ -95,7 +95,7 @@ const AppointmentHistoryTable = ({ appointments = [] }) => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-semibold text-gray-900">
-          Appointment History
+          Historial de citas
         </h2>
 
         <div className="flex items-center gap-3">
@@ -113,7 +113,7 @@ const AppointmentHistoryTable = ({ appointments = [] }) => {
             className="flex items-center gap-2 px-4 py-2 border rounded-lg hover:bg-gray-50"
           >
             <Filter className="w-4 h-4" />
-            <span className="text-sm">Filter</span>
+            <span className="text-sm">Filtro</span>
           </button>
         </div>
       </div>
@@ -124,10 +124,10 @@ const AppointmentHistoryTable = ({ appointments = [] }) => {
           <thead className="bg-gray-50 border-b">
             <tr>
               <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                Date & Time
+                Fecha y hora
               </th>
               <th className="px-6 py-3 text-left text-xs text-gray-500 uppercase">
-                Treatment / Reason
+                Tratamiento
               </th>
               <th className="px-6 py-3 w-16"></th>
             </tr>
@@ -168,7 +168,7 @@ const AppointmentHistoryTable = ({ appointments = [] }) => {
                   colSpan="3"
                   className="px-6 py-8 text-center text-gray-500"
                 >
-                  No appointments found
+                  Sin citas encontradas
                 </td>
               </tr>
             )}

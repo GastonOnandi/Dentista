@@ -44,15 +44,15 @@ const RegisterAppointmentPage = () => {
     setError(null);
 
     if (!formData.patientId) {
-      return setError('Select a patient from the list');
+      return setError('Seleccione un cliente de la lista');
     }
 
     if (!formData.treatmentId) {
-      return setError('Select a treatment');
+      return setError('Seleccione un tratamiento');
     }
 
     if (!formData.date) {
-      return setError('Select a date');
+      return setError('Seleccione una fecha');
     }
 
     const payload = {
@@ -69,8 +69,8 @@ const RegisterAppointmentPage = () => {
       setLoading(true);
       const response = await axios.post(`${API_URL}/turno/agendar`, payload);
       console.log('✅ Response:', response.data);
-      alert('Appointment scheduled successfully!');
-      navigate('/appointments');
+      alert('Cita registrada exitosamente!');
+      navigate('/');
     } catch (e) {
       console.error('❌ Error completo:', e);
       console.error('❌ Error response data:', e.response?.data);
@@ -88,7 +88,7 @@ const RegisterAppointmentPage = () => {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow w-full max-w-2xl">
         <div className="flex justify-between items-center p-6 border-b">
-          <h1 className="text-xl font-bold">Register Appointment</h1>
+          <h1 className="text-xl font-bold">Registrar cita</h1>
           <button 
             onClick={() => navigate('/')}
             className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -127,14 +127,14 @@ const RegisterAppointmentPage = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <TimeInput
-              label="Start Time"
+              label="Hora inicio"
               value={formData.startTime}
               onChange={(v) =>
                 setFormData(prev => ({ ...prev, startTime: v }))
               }
             />
             <TimeInput
-              label="End Time"
+              label="Hora finalización"
               value={formData.endTime}
               onChange={(v) =>
                 setFormData(prev => ({ ...prev, endTime: v }))
@@ -147,14 +147,14 @@ const RegisterAppointmentPage = () => {
               onClick={() => navigate('/')}
               className="px-6 py-3 border rounded hover:bg-gray-50 transition-colors"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               onClick={handleSubmit}
               disabled={loading}
               className="px-6 py-3 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Saving...' : 'Schedule'}
+              {loading ? 'Saving...' : 'Agendar'}
             </button>
           </div>
         </div>

@@ -28,7 +28,7 @@ const UpcomingAppointments = () => {
 
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Upcoming</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-6">Próximos turnos</h2>
       <div className="space-y-6">
 
         {secciones.map((section, sectionIndex) => (

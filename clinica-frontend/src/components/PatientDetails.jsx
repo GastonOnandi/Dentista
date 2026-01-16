@@ -7,7 +7,7 @@ const PatientDetails = ({ patient }) => {
   if (!patient) {
     return (
       <div className="flex-1 flex items-center justify-center bg-gray-50">
-        <p className="text-gray-400">Select a patient to view details</p>
+        <p className="text-gray-400">Seleccionar paciente</p>
       </div>
     );
   }
@@ -26,15 +26,15 @@ const PatientDetails = ({ patient }) => {
           </div>
           <div>
             <h2 className="text-2xl font-semibold text-gray-900">{patient.name}</h2>
-            <p className="text-sm text-gray-500">Last Visit: {patient.lastVisit}</p>
+            <p className="text-sm text-gray-500">Última visita: {patient.lastVisit}</p>
           </div>
         </div>
         <div className="flex gap-3">
           <button className="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">
-            Edit
+            Editar
           </button>
           <button className="px-6 py-2 bg-cyan-500 text-white rounded-lg text-sm font-medium hover:bg-cyan-600">
-            Save
+            Guardar
           </button>
         </div>
       </div>
@@ -43,16 +43,16 @@ const PatientDetails = ({ patient }) => {
       <div className="border-b border-gray-200 mb-8">
         <div className="flex gap-8">
           <button className="pb-4 border-b-2 border-cyan-500 text-cyan-500 font-medium">
-            Contact Info
+            Información de contacto
           </button>
           <button className="pb-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700">
-            Medical History
+            Historia médica
           </button>
           <button 
             className="pb-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700"
             onClick={() => navigate(`/patients/${patient.id}`)}
           >
-            Appointment History
+            Historial de citas
           </button>
         </div>
       </div>
@@ -60,12 +60,12 @@ const PatientDetails = ({ patient }) => {
       {/* Contact Info */}
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
-          <InfoField label="Address" value={patient.address} />
-          <InfoField label="Phone Number" value={patient.phone} />
+          <InfoField label="Dirección" value={patient.address} />
+          <InfoField label="Teléfono" value={patient.phone} />
         </div>
         <div className="grid grid-cols-2 gap-6">
-          <InfoField label="Email Address" value={patient.email} />
-          <InfoField label="Emergency Contact" value={patient.emergency} />
+          <InfoField label="Email" value={patient.email} />
+          <InfoField label="Contacto de emergencia" value={patient.emergency} />
         </div>
       </div>
     </div>

@@ -14,10 +14,10 @@ public interface TurnoRepository extends JpaRepository<Turno,Long> {
     List<Turno> findByClienteAsociadoCedula(Long idCliente);
     boolean existsByFecha(LocalDateTime fecha);
     @Query("SELECT t FROM Turno t " +
-            "LEFT JOIN FETCH t.clienteAsociado " +
-            "LEFT JOIN FETCH t.tratamientoAsociado " +
-            "WHERE t.fecha > :fecha " +
-            "ORDER BY t.fecha ASC, t.horaInicio ASC")
+            "            LEFT JOIN FETCH t.clienteAsociado" +
+            "            LEFT JOIN FETCH t.tratamientoAsociado" +
+            "            WHERE t.fecha > :fecha " +
+            "            ORDER BY t.fecha ASC, t.horaInicio ASC")
     List<Turno> findAllByFechaAfter(@Param("fecha") LocalDate fecha);
 
     @Query("SELECT t FROM Turno t " +

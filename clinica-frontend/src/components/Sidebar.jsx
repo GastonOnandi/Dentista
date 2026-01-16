@@ -11,7 +11,7 @@ const Sidebar = () => {
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6 flex items-center gap-2">
         <Shield className="w-8 h-8 text-cyan-500" />
-        <span className="text-xl font-bold text-gray-900">SmileCare</span>
+        <span className="text-xl font-bold text-gray-900">Cuidamos tu sonrisa</span>
       </div>
 
       {/* NAVIGATION */}
@@ -21,7 +21,7 @@ const Sidebar = () => {
           className="w-full flex items-center gap-3 px-4 py-3 text-cyan-600 bg-cyan-50 rounded-lg font-medium"
         >
           <LayoutDashboard className="w-5 h-5" />
-          Dashboard
+          Home
         </Link>
         
         <Link 
@@ -29,7 +29,7 @@ const Sidebar = () => {
           className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
         >
           <Calendar className="w-5 h-5" />
-          Calendar
+          Calendario
         </Link>
         
         <Link 
@@ -37,7 +37,7 @@ const Sidebar = () => {
           className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
         >
           <Users className="w-5 h-5" />
-          Patients
+          Pacientes
         </Link>
         
         <Link 
@@ -45,7 +45,7 @@ const Sidebar = () => {
           className="w-full flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg font-medium transition-colors"
         >
           <BarChart3 className="w-5 h-5" />
-          Reports
+          Reportes
         </Link>
 
         {/* 👇 ELIMINADO Settings */}
@@ -58,7 +58,7 @@ const Sidebar = () => {
           to="/appointments/register"
           className="w-full block bg-cyan-500 text-white py-3 rounded-lg font-semibold hover:bg-cyan-600 text-center transition-colors"
         >
-          New Appointment
+          Nueva cita
         </Link>
       </div>
     </div>

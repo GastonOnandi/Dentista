@@ -13,15 +13,15 @@ const Header = () => {
             <Plus className="text-white" size={24} />
           </div>
           <h1 className="text-2xl font-bold text-gray-800">
-            SmileCare
+            Cuidamos tu sonrisa
           </h1>
         </Link>
 
         {/* Navegación */}
         <nav className="flex items-center gap-8">
-          <NavItem to="/calendario" label="Calendar" />
-          <NavItem to="/patients" label="Patients" />
-          <NavItem to="/reports" label="Reports" />
+          <NavItem to="/calendario" label="Calendario" />
+          <NavItem to="/patients" label="Pacientes" />
+          <NavItem to="/reports" label="Reportes" />
         </nav>
 
         {/* Usuario */}

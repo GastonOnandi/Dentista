@@ -32,14 +32,14 @@ const PatientList = ({
         className="w-full bg-cyan-500 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2"
       >
         <Plus size={20} />
-        Add New Patient
+        Agregar paciente
       </button>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
-          placeholder="Search by Patient Name or ID"
+          placeholder="Buscar por nombre o cédula"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full py-3 pl-10 pr-4 border rounded-lg"
@@ -49,7 +49,7 @@ const PatientList = ({
       <div className="flex-1 overflow-y-auto space-y-2">
         {patients.length === 0 ? (
           <p className="text-sm text-gray-400 text-center mt-6">
-            No patients found
+            No se encontró el paciente
           </p>
         ) : (
           patients.map((patient) => (

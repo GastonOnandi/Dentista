@@ -16,7 +16,7 @@ const TreatmentTypeSelect = ({ value, onChange, treatments, onAddTreatment }) =>
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        Treatment Type
+        Tipo de tratamiento
       </label>
 
       <div className="relative">
@@ -25,7 +25,7 @@ const TreatmentTypeSelect = ({ value, onChange, treatments, onAddTreatment }) =>
           onChange={handleChange}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-white"
         >
-          <option value="">Select treatment</option>
+          <option value="">Seleccione tratamiento</option>
 
           {treatments.map((treatment) => (
             <option key={treatment.id} value={treatment.id}>

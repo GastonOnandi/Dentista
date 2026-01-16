@@ -5,12 +5,12 @@ const ContactInfo = ({ patient }) => {
       {/* Address / Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Address</h3>
+          <h3 className="text-sm font-medium text-gray-500">Dirección</h3>
           <p className="mt-1 text-gray-900">{patient.address}</p>
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-gray-500">Phone Number</h3>
+          <h3 className="text-sm font-medium text-gray-500">Teléfono</h3>
           <p className="mt-1 text-gray-900">{patient.phone}</p>
         </div>
       </div>
@@ -20,9 +20,9 @@ const ContactInfo = ({ patient }) => {
 
         {/* Allergies */}
         <div>
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Allergies</h3>
+          <h3 className="text-sm font-medium text-gray-500 mb-2">Alergias</h3>
           {(patient.allergies ?? []).length === 0 && (
-            <p className="text-sm text-gray-400">No allergies registered</p>
+            <p className="text-sm text-gray-400">Sin alergias registradas</p>
           )}
           {(patient.allergies ?? []).map((item, index) => (
             <div
@@ -36,9 +36,9 @@ const ContactInfo = ({ patient }) => {
 
         {/* Medications */}
         <div>
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Medications</h3>
+          <h3 className="text-sm font-medium text-gray-500 mb-2">Medicaciones</h3>
           {(patient.medications ?? []).length === 0 && (
-            <p className="text-sm text-gray-400">No medications registered</p>
+            <p className="text-sm text-gray-400">No hay medicamentos</p>
           )}
           {(patient.medications ?? []).map((item, index) => (
             <div
