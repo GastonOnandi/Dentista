@@ -148,7 +148,7 @@ const PatientDetailPage = () => {
           <div>
             <h1 className="text-2xl font-semibold">{patientInfo.nombre}</h1>
             <p className="text-sm text-gray-500">
-              Ultimas visitas: {patientInfo.ultimaVisita ?? "Nunca"}
+              Ultima visita: {patientInfo.ultimaVisita ?? "Nunca"}
             </p>
           </div>
         </div>

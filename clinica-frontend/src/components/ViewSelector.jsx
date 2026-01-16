@@ -1,7 +1,7 @@
 const ViewSelector = ({ activeView, onViewChange }) => {
   return (
     <div className="flex gap-2">
-      {["Day", "Week", "Month"].map(view => (
+      {["Día", "Semana", "Mes"].map(view => (
         <button
           key={view}
           onClick={() => onViewChange(view)}
