@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage';
 import CalendarPage from './pages/CalendarPage';
 import PatientsPage from './pages/PatientsPage';
 import PatientDetailPage from './pages/PatientDetailPage';
+import EditPatientPage from './pages/EditPatientPage';
 import ReportsPage from './pages/ReportsPage';
 import RegisterPatientPage from './pages/RegisterPatientPage';
 import RegisterAppointmentPage from './pages/RegisterAppointmentPage';
@@ -28,6 +29,7 @@ function App() {
 
           {/* IMPORTANTE: Las rutas específicas van ANTES de las dinámicas */}
           <Route path="/patients/register" element={<RegisterPatientPage />} />
+          <Route path="/patients/:cedula/edit" element={<EditPatientPage />} />
           <Route path="/patients/:cedula" element={<PatientDetailPage />} />
 
           <Route path="/reports" element={<ReportsPage />} />

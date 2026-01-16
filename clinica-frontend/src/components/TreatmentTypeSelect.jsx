@@ -34,7 +34,7 @@ const TreatmentTypeSelect = ({ value, onChange, treatments, onAddTreatment }) =>
           ))}
 
           {/* 🔥 Opción para agregar uno nuevo */}
-          <option value="__add__">➕ Add new treatment</option>
+          <option value="__add__">➕Añadir nuevo tratamiento</option>
         </select>
 
         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />

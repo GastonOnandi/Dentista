@@ -7,6 +7,7 @@ import PatientSearchInput from '../components/PatientSearchInput';
 import TreatmentTypeSelect from '../components/TreatmentTypeSelect';
 import DateInput from '../components/DateInput';
 import TimeInput from '../components/TimeInput';
+import RegisterTreatmentModal from '../components/RegisterTreatmentModal';
 
 const API_URL = 'http://localhost:8080/api';
 
@@ -17,6 +18,7 @@ const RegisterAppointmentPage = () => {
   const [treatments, setTreatments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     patientId: null,
@@ -28,8 +30,13 @@ const RegisterAppointmentPage = () => {
   });
 
   useEffect(() => {
-    axios.get(`${API_URL}/cliente/mostrar`).then(r => setPatients(r.data));
-    axios.get(`${API_URL}/tratamiento/listar`).then(r => setTreatments(r.data));
+    axios.get(`${API_URL}/cliente/mostrar`)
+      .then(r => setPatients(r.data))
+      .catch(err => console.error('Error cargando pacientes:', err));
+    
+    axios.get(`${API_URL}/tratamiento/listar`)
+      .then(r => setTreatments(r.data))
+      .catch(err => console.error('Error cargando tratamientos:', err));
   }, []);
 
   const handleSelectPatient = (patient) => {
@@ -38,6 +45,31 @@ const RegisterAppointmentPage = () => {
       patientId: patient.cedula,
       patientName: patient.nombre,
     }));
+  };
+
+  const handleAddTreatment = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleSaveTreatment = async (newTreatment) => {
+    try {
+      const response = await axios.post(`${API_URL}/tratamiento/crear`, newTreatment);
+      const savedTreatment = response.data;
+
+      // Agregar el nuevo tratamiento a la lista
+      setTreatments([...treatments, savedTreatment]);
+
+      // Seleccionar automáticamente el nuevo tratamiento
+      setFormData(prev => ({ ...prev, treatmentId: savedTreatment.id }));
+
+      // Cerrar el modal
+      setIsModalOpen(false);
+
+      console.log('✅ Tratamiento guardado:', savedTreatment);
+    } catch (error) {
+      console.error('❌ Error guardando tratamiento:', error);
+      alert('Error al guardar el tratamiento');
+    }
   };
 
   const handleSubmit = async () => {
@@ -58,7 +90,7 @@ const RegisterAppointmentPage = () => {
     const payload = {
       idCliente: formData.patientId,
       idTratamiento: formData.treatmentId,
-      fecha: formData.date, // ← Enviar directamente en formato yyyy-MM-dd
+      fecha: formData.date,
       horaInicio: formData.startTime,
       horaFin: formData.endTime,
     };
@@ -116,6 +148,7 @@ const RegisterAppointmentPage = () => {
             onChange={(v) =>
               setFormData(prev => ({ ...prev, treatmentId: v }))
             }
+            onAddTreatment={handleAddTreatment}
           />
 
           <DateInput
@@ -154,11 +187,18 @@ const RegisterAppointmentPage = () => {
               disabled={loading}
               className="px-6 py-3 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Saving...' : 'Agendar'}
+              {loading ? 'Guardando...' : 'Agendar'}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Modal para agregar tratamiento */}
+      <RegisterTreatmentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveTreatment}
+      />
     </div>
   );
 };
