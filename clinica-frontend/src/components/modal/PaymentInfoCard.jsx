@@ -5,15 +5,15 @@ const PaymentInfoCard = ({ amount = 0, discount = 0 }) => {
 
   return (
     <div className="p-4 bg-white rounded-xl shadow border">
-      <h2 className="font-semibold text-lg mb-2">Payment Summary</h2>
+      <h2 className="font-semibold text-lg mb-2">Resumen del Pago</h2>
 
       <div className="flex justify-between text-sm mb-1">
-        <span>Amount:</span>
+        <span>Monto:</span>
         <span>${Number(amount).toFixed(2)}</span>
       </div>
 
       <div className="flex justify-between text-sm mb-1">
-        <span>Discount:</span>
+        <span>Descuento:</span>
         <span>-${Number(discount).toFixed(2)}</span>
       </div>
 

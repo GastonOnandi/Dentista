@@ -37,7 +37,7 @@ const FilterSection = ({ onFilterChange }) => {
         {/* Start Date */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Start Date
+            Fecha de Inicio
           </label>
           <input
             type="date"
@@ -50,7 +50,7 @@ const FilterSection = ({ onFilterChange }) => {
         {/* End Date */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            End Date
+            Fecha de Fin
           </label>
           <input
             type="date"
@@ -63,13 +63,13 @@ const FilterSection = ({ onFilterChange }) => {
         {/* Patient Name */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Patient Name
+            Nombre del Paciente
           </label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by Patient Name"
+              placeholder="Buscar paciente por nombre"
               value={filters.patientName}
               onChange={(e) => handleChange('patientName', e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -80,18 +80,18 @@ const FilterSection = ({ onFilterChange }) => {
         {/* Treatment Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Treatment Type
+            Tipo de Tratamiento
           </label>
           <select
             value={filters.treatmentType}
             onChange={(e) => handleChange('treatmentType', e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
           >
-            <option value="all">All Treatments</option>
-            <option value="cleaning">Routine Cleaning</option>
-            <option value="filling">Filling</option>
-            <option value="crown">Crown</option>
-            <option value="implant">Implant Consultation</option>
+            <option value="all">Todos los tratamientos</option>
+            <option value="cleaning">Limpieza</option>
+            <option value="filling">Relleno</option>
+            <option value="crown">Corona</option>
+            <option value="implant">Implante</option>
           </select>
         </div>
       </div>
@@ -102,12 +102,12 @@ const FilterSection = ({ onFilterChange }) => {
           onClick={handleReset}
           className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
         >
-          Reset Filters
+          Reseteo de filtros
         </button>
         <button
           className="px-6 py-2 bg-cyan-500 text-white rounded-lg font-medium hover:bg-cyan-600 transition-colors"
         >
-          Apply Filters
+          Aplicar filtros
         </button>
       </div>
     </div>

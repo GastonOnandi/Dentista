@@ -36,7 +36,7 @@ const CalendarPage = () => {
 
     fetch(`http://localhost:8080/api/turno/fechas?inicio=${inicio}&fin=${fin}`)
       .then(res => {
-        if (!res.ok) throw new Error("Error loading appointments");
+        if (!res.ok) throw new Error("Error cargando citas");
         return res.json();
       })
       .then(data => {
@@ -99,9 +99,9 @@ const CalendarPage = () => {
     <div className="max-w-[1600px] mx-auto p-6 space-y-4">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-4xl font-bold mb-2">Appointments</h1>
+        <h1 className="text-4xl font-bold mb-2">Citas</h1>
         <p className="text-gray-600">
-          Manage your daily, weekly, and monthly schedule.
+          Gestiona tu agenda diaria, semanal y mensual.
         </p>
       </div>
 
@@ -136,7 +136,7 @@ const CalendarPage = () => {
       {/* Vista del calendario */}
       {loading ? (
         <div className="flex items-center justify-center h-96">
-          <div className="text-gray-500">Loading appointments...</div>
+          <div className="text-gray-500">Cargando citas...</div>
         </div>
       ) : (
         renderView()
