@@ -1,19 +1,17 @@
 import React from "react";
-import moment from "moment";
-import "moment/locale/es";
+import { format, startOfMonth, startOfWeek, addDays, getMonth, isToday } from "date-fns";
+import { es } from "date-fns/locale";
 
 const CalendarGridMonth = ({ baseDate }) => {
-  moment.locale("es");
-
-  const startOfMonth = moment(baseDate).startOf("month");
+  const monthStart = startOfMonth(baseDate);
   // Empezar en el lunes de la semana del primer día del mes
-  const startOfGrid = moment(startOfMonth).startOf("isoWeek");
+  const gridStart = startOfWeek(monthStart, { weekStartsOn: 1 });
 
   const days = Array.from({ length: 42 }).map((_, i) =>
-    moment(startOfGrid).add(i, "days")
+    addDays(gridStart, i)
   );
 
-  // Forzamos nombres manuales si el locale sigue fallando en tu entorno
+  // Nombres de los días en español
   const dayNames = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
 
   return (
@@ -28,18 +26,18 @@ const CalendarGridMonth = ({ baseDate }) => {
 
       <div className="grid grid-cols-7 border-l border-t">
         {days.map((day) => {
-          const isCurrentMonth = day.month() === startOfMonth.month();
-          const isToday = day.isSame(moment(), "day");
+          const isCurrentMonth = getMonth(day) === getMonth(monthStart);
+          const isTodayDate = isToday(day);
           
           return (
             <div
-              key={day.format("YYYY-MM-DD")}
+              key={format(day, "yyyy-MM-dd")}
               className={`h-28 border-r border-b p-2 ${
                 !isCurrentMonth ? "bg-gray-50 text-gray-300" : "bg-white"
-              } ${isToday ? "bg-cyan-50" : ""}`}
+              } ${isTodayDate ? "bg-cyan-50" : ""}`}
             >
-              <div className={`text-right text-xs ${isToday ? "font-bold text-cyan-600" : ""}`}>
-                {day.format("D")}
+              <div className={`text-right text-xs ${isTodayDate ? "font-bold text-cyan-600" : ""}`}>
+                {format(day, "d")}
               </div>
             </div>
           );
