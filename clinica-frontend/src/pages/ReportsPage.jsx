@@ -1,44 +1,81 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Download, Printer } from "lucide-react";
 import FilterSection from "../components/FilterSection";
 import ReportsTable from "../components/ReportsTable";
 import PaymentModal from "../components/modal/PaymentModal";
 
+const BASE_URL = "http://localhost:8080/api/clientetratamiento";
+
 const ReportsPage = () => {
   const [reports, setReports] = useState([]);
-  const [paymentData, setPaymentData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [paymentData, setPaymentData] = useState(null);
 
   useEffect(() => {
-    fetchReports();
+    cargarPendientes();
   }, []);
 
-  const fetchReports = async () => {
+  // 🛡️ fetch blindado (NUNCA rompe la tabla)
+  const fetchData = async (url) => {
+    console.log("GET →", url);
     setLoading(true);
     try {
-      const response = await fetch(
-        "http://localhost:8080/api/clientetratamiento/deudas/pendientes"
-      );
-      const data = await response.json();
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      if (!Array.isArray(data)) {
+        console.error("La API no devolvió un array:", data);
+        setReports([]);
+        return;
+      }
+
       setReports(data);
     } catch (err) {
       console.error("Error cargando reportes:", err);
+      setReports([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handlePaymentClick = (rowData) => {
-    setPaymentData(rowData);
+  const cargarPendientes = () => {
+    fetchData(`${BASE_URL}/deudas/pendientes`);
   };
 
-  const handleCloseModal = () => {
-    setPaymentData(null);
+  const cargarTodas = () => {
+    fetchData(`${BASE_URL}/deudas`);
   };
 
-  const handlePaymentSuccess = () => {
-    setPaymentData(null);
-    fetchReports(); // 🔁 refresca tabla
+  // 🔥 FILTRADO REAL (orden lógico correcto)
+  const handleFilterChange = (filters) => {
+
+    // 1️⃣ Cliente (máxima prioridad)
+    if (filters.idCliente) {
+      fetchData(`${BASE_URL}/cliente/${filters.idCliente}`);
+      return;
+    }
+
+    // 2️⃣ Rango de fechas (GET con query params)
+    if (filters.fechaInicio && filters.fechaFin) {
+      fetchData(
+        `${BASE_URL}/fechas?inicio=${filters.fechaInicio}&fin=${filters.fechaFin}`
+      );
+      return;
+    }
+
+    // 3️⃣ Solo pendientes
+    if (filters.soloPendientes === true) {
+      cargarPendientes();
+      return;
+    }
+
+    // 4️⃣ Default → todas
+    cargarTodas();
   };
 
   return (
@@ -48,8 +85,8 @@ const ReportsPage = () => {
         {paymentData && (
           <PaymentModal
             data={paymentData}
-            onClose={handleCloseModal}
-            onSuccess={handlePaymentSuccess}
+            onClose={() => setPaymentData(null)}
+            onSuccess={cargarPendientes}
           />
         )}
 
@@ -65,12 +102,12 @@ const ReportsPage = () => {
           </div>
         </div>
 
-        <FilterSection />
+        <FilterSection onFilterChange={handleFilterChange} />
 
         <ReportsTable
           data={reports}
           loading={loading}
-          onPaymentClick={handlePaymentClick}
+          onPaymentClick={setPaymentData}
         />
       </div>
     </div>

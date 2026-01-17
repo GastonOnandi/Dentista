@@ -1,19 +1,21 @@
-import React from 'react';
-import { Edit, CreditCard } from 'lucide-react';
+import React from "react";
+import { Edit, CreditCard } from "lucide-react";
 
 const ReportsTable = ({ data, loading, onPaymentClick }) => {
 
-  // Calcular el estado de pago basado en pago/total
+  // 🛡️ Blindaje total
+  const safeData = Array.isArray(data) ? data : [];
+
   const calculatePaymentStatus = (pago, total) => {
-    if (!total || total === 0) return 'PENDING';
-    if (pago >= total) return 'PAID';
-    if (pago > 0) return 'PENDING';
-    return 'UNPAID';
+    if (!total || total === 0) return "PENDING";
+    if (pago >= total) return "PAID";
+    if (pago > 0) return "PENDING";
+    return "UNPAID";
   };
 
   const getStatusBadge = (pago, total) => {
     const status = calculatePaymentStatus(pago, total);
-    
+
     const styles = {
       PAID: "bg-green-100 text-green-700",
       UNPAID: "bg-red-100 text-red-700",
@@ -22,7 +24,7 @@ const ReportsTable = ({ data, loading, onPaymentClick }) => {
 
     const labels = {
       PAID: "Pagado",
-      UNPAID: "Sin Pagar",
+      UNPAID: "Sin pagar",
       PENDING: "Pendiente",
     };
 
@@ -39,91 +41,58 @@ const ReportsTable = ({ data, loading, onPaymentClick }) => {
         <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Nombre Paciente
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Tratamiento
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Fecha
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Total
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Pagado
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Deuda
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Estado
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                Acciones
-              </th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Paciente</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Tratamiento</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Fecha</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Total</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Pagado</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Deuda</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Estado</th>
+              <th className="px-6 py-4 text-left text-xs font-semibold">Acciones</th>
             </tr>
           </thead>
 
           <tbody className="divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan="8" className="px-6 py-8 text-center text-gray-500">
+                <td colSpan="8" className="px-6 py-8 text-center">
                   Cargando...
                 </td>
               </tr>
-            ) : !data || data.length === 0 ? (
+            ) : safeData.length === 0 ? (
               <tr>
-                <td colSpan="8" className="px-6 py-8 text-center text-gray-500">
+                <td colSpan="8" className="px-6 py-8 text-center">
                   No se encontraron resultados
                 </td>
               </tr>
             ) : (
-              data.map((report, index) => (
-                <tr 
-                  key={`${report.nombrePaciente}-${report.nombreTratamiento}-${report.fecha}-${index}`}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 text-sm text-gray-900 font-medium">
-                    {report.nombrePaciente}
+              safeData.map((report, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="px-6 py-4">{report.nombrePaciente}</td>
+                  <td className="px-6 py-4">{report.nombreTratamiento}</td>
+                  <td className="px-6 py-4">{report.fecha}</td>
+                  <td className="px-6 py-4 font-semibold">
+                    ${report.total ?? 0}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    {report.nombreTratamiento}
+                  <td className="px-6 py-4 text-green-600">
+                    ${report.pago ?? 0}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    {report.fecha}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900 font-semibold">
-                    ${report.total?.toLocaleString() || 0}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-green-600 font-medium">
-                    ${report.pago?.toLocaleString() || 0}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-red-600 font-medium">
-                    ${report.deuda?.toLocaleString() || 0}
+                  <td className="px-6 py-4 text-red-600">
+                    ${report.deuda ?? 0}
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(report.pago, report.total)}
                   </td>
-
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <button 
-                        className="flex items-center gap-1 text-cyan-600 hover:text-cyan-700 text-sm font-medium hover:underline"
-                      >
-                        <Edit className="w-4 h-4" />
-                        Editar
-                      </button>
-
-                      <button
-                        onClick={() => onPaymentClick(report)}
-                        className="flex items-center gap-1 text-cyan-600 hover:text-cyan-700 text-sm font-medium hover:underline"
-                      >
-                        <CreditCard className="w-4 h-4" />
-                        Pago
-                      </button>
-                    </div>
+                  <td className="px-6 py-4 flex gap-3">
+                    <button className="flex items-center gap-1 text-cyan-600">
+                      <Edit size={16} /> Editar
+                    </button>
+                    <button
+                      onClick={() => onPaymentClick(report)}
+                      className="flex items-center gap-1 text-cyan-600"
+                    >
+                      <CreditCard size={16} /> Pago
+                    </button>
                   </td>
                 </tr>
               ))
@@ -132,10 +101,8 @@ const ReportsTable = ({ data, loading, onPaymentClick }) => {
         </table>
       </div>
 
-      <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-        <p className="text-sm text-gray-600">
-          Mostrando {data?.length || 0} resultado{data?.length !== 1 ? 's' : ''}
-        </p>
+      <div className="px-6 py-4 border-t text-sm text-gray-600">
+        Mostrando {safeData.length} resultado{safeData.length !== 1 && "s"}
       </div>
     </div>
   );
