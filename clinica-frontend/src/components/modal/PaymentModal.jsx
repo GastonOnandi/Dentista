@@ -13,32 +13,55 @@ const PaymentModal = ({ data, onClose, onSuccess }) => {
 
   const [amountToPay, setAmountToPay] = useState(deuda);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setAmountToPay(deuda);
   }, [deuda]);
 
   const handlePay = async () => {
-    if (amountToPay <= 0 || amountToPay > deuda) return;
+    if (amountToPay <= 0 || amountToPay > deuda) {
+      setError("Monto inválido");
+      return;
+    }
 
     setLoading(true);
+    setError(null);
+    
     try {
+      console.log("💰 Enviando pago:", amountToPay); // Solo el número
+      
       const response = await fetch(
         `http://localhost:8080/api/cliente/clientetratamiento/${data.id}/pagar`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(amountToPay),
+          headers: { 
+            "Content-Type": "application/json" 
+          },
+          body: JSON.stringify(amountToPay), // 🔥 SOLO el número, no un objeto
         }
       );
 
       if (!response.ok) {
-        throw new Error("Error al registrar el pago");
+        let errorMsg = `Error ${response.status}`;
+        try {
+          const errorData = await response.json();
+          console.error("❌ Error del servidor:", errorData);
+          errorMsg = errorData.message || errorMsg;
+        } catch (e) {
+          errorMsg = await response.text();
+        }
+        throw new Error(errorMsg);
       }
 
-      onSuccess(); // refresca + cierra
+      console.log("✅ Pago registrado exitosamente");
+      
+      // Cierra modal y recarga datos
+      onSuccess();
+      
     } catch (err) {
-      console.error("Error pagando:", err);
+      console.error("❌ Error pagando:", err);
+      setError(err.message || "Error al procesar el pago");
     } finally {
       setLoading(false);
     }
@@ -64,6 +87,13 @@ Deuda: $${deuda}
         onChange={setAmountToPay}
       />
 
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+          <p className="text-sm font-semibold">Error al procesar el pago</p>
+          <p className="text-xs mt-1">{error}</p>
+        </div>
+      )}
+
       <PaymentActions
         onPay={handlePay}
         disabled={
@@ -72,6 +102,12 @@ Deuda: $${deuda}
           amountToPay > deuda
         }
       />
+
+      {loading && (
+        <div className="text-center text-gray-500 text-sm mt-2">
+          Procesando pago...
+        </div>
+      )}
     </ModalBase>
   );
 };

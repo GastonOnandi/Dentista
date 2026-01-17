@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Download, Printer } from "lucide-react";
 import FilterSection from "../components/FilterSection";
 import ReportsTable from "../components/ReportsTable";
@@ -10,26 +10,22 @@ const ReportsPage = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(false);
   const [paymentData, setPaymentData] = useState(null);
+  const [activeFilters, setActiveFilters] = useState({
+    idCliente: "",
+    fechaInicio: "",
+    fechaFin: "",
+    soloPendientes: true,
+  });
 
-  useEffect(() => {
-    cargarPendientes();
-  }, []);
-
-  // 🛡️ fetch blindado (NUNCA rompe la tabla)
-  const fetchData = async (url) => {
+  const fetchData = useCallback(async (url) => {
     console.log("GET →", url);
     setLoading(true);
     try {
       const res = await fetch(url);
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
-
       if (!Array.isArray(data)) {
-        console.error("La API no devolvió un array:", data);
         setReports([]);
         return;
       }
@@ -41,26 +37,24 @@ const ReportsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const cargarPendientes = () => {
+  const cargarPendientes = useCallback(() => {
     fetchData(`${BASE_URL}/deudas/pendientes`);
-  };
+  }, [fetchData]);
 
-  const cargarTodas = () => {
+  const cargarTodas = useCallback(() => {
     fetchData(`${BASE_URL}/deudas`);
-  };
+  }, [fetchData]);
 
-  // 🔥 FILTRADO REAL (orden lógico correcto)
-  const handleFilterChange = (filters) => {
+  const handleFilterChange = useCallback((filters) => {
+    setActiveFilters(filters);
 
-    // 1️⃣ Cliente (máxima prioridad)
     if (filters.idCliente) {
       fetchData(`${BASE_URL}/cliente/${filters.idCliente}`);
       return;
     }
 
-    // 2️⃣ Rango de fechas (GET con query params)
     if (filters.fechaInicio && filters.fechaFin) {
       fetchData(
         `${BASE_URL}/fechas?inicio=${filters.fechaInicio}&fin=${filters.fechaFin}`
@@ -68,15 +62,22 @@ const ReportsPage = () => {
       return;
     }
 
-    // 3️⃣ Solo pendientes
-    if (filters.soloPendientes === true) {
+    if (filters.soloPendientes) {
       cargarPendientes();
       return;
     }
 
-    // 4️⃣ Default → todas
     cargarTodas();
-  };
+  }, [fetchData, cargarPendientes, cargarTodas]);
+
+  useEffect(() => {
+    cargarPendientes();
+  }, [cargarPendientes]);
+
+  const handlePaymentSuccess = useCallback(() => {
+    setPaymentData(null);
+    handleFilterChange(activeFilters);
+  }, [activeFilters, handleFilterChange]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -86,17 +87,17 @@ const ReportsPage = () => {
           <PaymentModal
             data={paymentData}
             onClose={() => setPaymentData(null)}
-            onSuccess={cargarPendientes}
+            onSuccess={handlePaymentSuccess}
           />
         )}
 
         <div className="flex justify-between mb-6">
           <h1 className="text-4xl font-bold">Reportes</h1>
           <div className="flex gap-3">
-            <button className="px-4 py-2 border rounded">
+            <button className="px-4 py-2 border rounded hover:bg-gray-100 transition-colors">
               <Printer size={16} />
             </button>
-            <button className="px-4 py-2 bg-cyan-500 text-white rounded">
+            <button className="px-4 py-2 bg-cyan-500 text-white rounded hover:bg-cyan-600 transition-colors">
               <Download size={16} />
             </button>
           </div>

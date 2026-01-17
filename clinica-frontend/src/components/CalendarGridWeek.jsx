@@ -1,24 +1,21 @@
 import React, { useMemo } from "react";
-import moment from "moment";
-import "moment/locale/es"; // Importante: cargar el idioma
+import { format, startOfWeek, addDays, isToday } from "date-fns";
+import { es } from "date-fns/locale";
 import AppointmentCard from "./AppointmentCard";
 
 const CalendarGridWeek = ({ appointments = {}, baseDate }) => {
-  // Seteamos el idioma español localmente para este componente
-  moment.locale("es");
-
   const days = useMemo(() => {
-    // .startOf("isoWeek") garantiza que empezamos en LUNES
-    const startOfWeek = moment(baseDate).startOf("isoWeek");
+    // weekStartsOn: 1 garantiza que empezamos en LUNES
+    const startOfWeekDate = startOfWeek(baseDate, { weekStartsOn: 1 });
 
     return Array.from({ length: 7 }).map((_, i) => {
-      const fecha = moment(startOfWeek).add(i, "days");
+      const fecha = addDays(startOfWeekDate, i);
       return {
-        // "dddd" devuelve el nombre completo, "ddd" abreviado
-        name: fecha.format("ddd"), 
-        date: fecha.format("D"),
-        keyDate: fecha.format("YYYY-MM-DD"),
-        isToday: fecha.isSame(moment(), "day"),
+        // "EEE" devuelve abreviado (lun, mar, mié), "EEEE" completo (lunes, martes, miércoles)
+        name: format(fecha, "EEE", { locale: es }), 
+        date: format(fecha, "d"),
+        keyDate: format(fecha, "yyyy-MM-dd"),
+        isToday: isToday(fecha),
       };
     });
   }, [baseDate]);
