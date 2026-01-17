@@ -30,12 +30,12 @@ public class ClienteTratamientoController {
         return ResponseEntity.ok(response);
     }
 
-    /** Deudas por estado concreto: PAID / PENDING / UNPAID */
+    /** Deudas por estado concreto:
     @GetMapping("/deudas/estado/{estado}")
     public ResponseEntity<List<DeudaTratamientoDTO>> obtenerDeudasPorEstado(@PathVariable String estado) {
         List<DeudaTratamientoDTO> response = clienteTratamientoService.obtenerDeudasPorEstado(estado);
         return ResponseEntity.ok(response);
-    }
+    }*/
 
 
     // ==========================
@@ -63,9 +63,12 @@ public class ClienteTratamientoController {
 
     /** Tratamientos en rango de fechas */
     @GetMapping("/fechas")
-    public ResponseEntity<List<ClienteTratamiento>> obtenerPorRangoDeFechas(RangoDeFechas rangoDeFechas) {
-        LocalDate fechaInicio = rangoDeFechas.getInicio();
-        LocalDate fechaFin = rangoDeFechas.getFin();
-        return ResponseEntity.ok(clienteTratamientoService.obtenerPorRangoDeFechas(fechaInicio, fechaFin));
+    public ResponseEntity<List<ClienteTratamiento>> obtenerPorRangoDeFechas(@RequestParam("inicio") String inicio, @RequestParam("fin") String fin) {
+        LocalDate fechaInicio = LocalDate.parse(inicio);
+        LocalDate fechaFin = LocalDate.parse(fin);
+
+        return ResponseEntity.ok(
+                clienteTratamientoService.obtenerPorRangoDeFechas(fechaInicio, fechaFin)
+        );
     }
 }

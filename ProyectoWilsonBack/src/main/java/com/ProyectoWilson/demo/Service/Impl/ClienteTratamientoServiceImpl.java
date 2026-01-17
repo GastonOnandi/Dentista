@@ -144,7 +144,7 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
             Long pago = ct.getPago();
             Long total = ct.getTratamiento().getCosto();
             Long deuda = total - pago;
-            if (ct.getEstado() == estado) {
+            if (ct.getEstado().equalsIgnoreCase(estado)) {
                 DeudaTratamientoDTO dto = new DeudaTratamientoDTO(
                         ct.getId(),
                         ct.getCliente().getNombre(),
