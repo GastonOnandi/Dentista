@@ -4,6 +4,7 @@ import com.ProyectoWilson.demo.DTO.Request.TratamientoRequestDTO;
 import com.ProyectoWilson.demo.DTO.Response.TratamientoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Tratamiento;
 import com.ProyectoWilson.demo.Exceptions.Tratamiento.TratamientoNoExiste;
+import com.ProyectoWilson.demo.Exceptions.Tratamiento.TratamientoYaExiste;
 import com.ProyectoWilson.demo.Mapper.TratamientoMapper;
 import com.ProyectoWilson.demo.Repository.TratamientoRepository;
 import com.ProyectoWilson.demo.Service.Interfaces.Historico.HistoricoTratamientoService;
@@ -11,7 +12,6 @@ import com.ProyectoWilson.demo.Service.Interfaces.TratamientoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +27,9 @@ public class TratamientoServiceImpl implements TratamientoService {
     private HistoricoTratamientoService historicoTratamientoService;
     @Override
     public TratamientoResponseDTO registrarTratamiento(TratamientoRequestDTO dto) {
+        if (tratamientoRepository.existsByNombre(dto.getNombre())){
+            throw new TratamientoYaExiste();
+        }
         Tratamiento tratamiento = tratamientoMapper.toEntity(dto);
         tratamientoRepository.save(tratamiento);
         historicoTratamientoService.registrarAgregar(tratamiento);

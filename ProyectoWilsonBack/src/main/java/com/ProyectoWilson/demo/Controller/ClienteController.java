@@ -2,6 +2,7 @@ package com.ProyectoWilson.demo.Controller;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteConsideracionRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Request.DeudaUpdateDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
@@ -95,6 +96,22 @@ public class ClienteController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @PostMapping("/{cedula}/actualizar-deuda")
+    public ResponseEntity<?> actualizarDeuda(
+            @PathVariable Long cedula,
+            @RequestBody DeudaUpdateDTO deudaDTO) {
+
+        try {
+            clienteService.actualizarDeuda(cedula,deudaDTO);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Cliente no encontrado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar deuda: " + e.getMessage());
         }
     }
 }

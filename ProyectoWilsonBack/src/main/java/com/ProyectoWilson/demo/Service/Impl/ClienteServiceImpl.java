@@ -1,12 +1,14 @@
 package com.ProyectoWilson.demo.Service.Impl;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Request.DeudaUpdateDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Cliente;
 import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
+import com.ProyectoWilson.demo.Entities.Historico.HistoricoCliente;
 import com.ProyectoWilson.demo.Entities.Turno;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteNoExiste;
 import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
@@ -142,6 +144,30 @@ public class ClienteServiceImpl implements ClienteService {
         }
 
         return clientesDTO;
+    }
+
+    @Override
+    public void actualizarDeuda(Long cedula, DeudaUpdateDTO dto) {
+        Cliente cliente = clienteRepository.findById(cedula).orElseThrow(ClienteNoExiste::new);
+        Long deudaAnterior = cliente.getDeuda();
+        Long deudaNueva = deudaAnterior + dto.getMonto();
+        cliente.setDeuda(deudaNueva);
+        clienteRepository.save(cliente);
+
+        HistoricoCliente historicoCliente = new HistoricoCliente();
+        historicoCliente.setCliente(cliente);
+        historicoCliente.setFechaModificacion(LocalDate.now());
+        if (dto.getMonto()<0){
+            historicoCliente.setTipoModificacion("Pago");
+            historicoCliente.setDeudaAnterior(deudaAnterior);
+            historicoCliente.setDeudaNueva(deudaNueva);
+        }
+        if (dto.getMonto()>0){
+            historicoCliente.setTipoModificacion("Cargo");
+            historicoCliente.setDeudaAnterior(deudaAnterior);
+            historicoCliente.setDeudaNueva(deudaNueva);
+        }
+
     }
 
 

@@ -46,11 +46,13 @@ public class ClienteMapper {
 
     public ClienteInfoResponseDTO toClienteInfoResponseDTO(Cliente cliente){
         ClienteInfoResponseDTO dto = new ClienteInfoResponseDTO(
+                cliente.getCedula(), 
                 cliente.getNombre(),
                 obtenerUltimaVisita(cliente.getCedula()),
                 cliente.getTelefono(),
                 cliente.getDireccion(),
                 cliente.getAvatarUrl(),
+                cliente.getDeuda(),
                 obtenerAlergias(cliente.getCedula()),
                 obtenerMedicacion(cliente.getCedula())
         );

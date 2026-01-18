@@ -32,7 +32,9 @@ public class HistoricoCliente {
     private String nombreViejo;
     private Long telefonoViejo;
     private String direccionVieja;
+    private Long deudaAnterior;
     private String nombreNuevo;
     private Long telefonoNuevo;
     private String direccionNueva;
+    private Long deudaNueva;
 }

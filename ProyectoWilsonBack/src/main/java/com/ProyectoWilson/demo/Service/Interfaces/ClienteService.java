@@ -1,6 +1,7 @@
 package com.ProyectoWilson.demo.Service.Interfaces;
 
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
+import com.ProyectoWilson.demo.DTO.Request.DeudaUpdateDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
@@ -25,4 +26,5 @@ public interface ClienteService {
     List<TurnoResponseDTO> citasPorCliente(Long idCliente);
     ClienteInfoResponseDTO obtenerInfoPorId(Long idCliente);
     List<ClienteResponseDTO> buscarClientes(String q);
+    void actualizarDeuda(Long cedula, DeudaUpdateDTO dto);
 }

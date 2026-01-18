@@ -12,4 +12,5 @@ public interface TratamientoRepository extends JpaRepository<Tratamiento, Long> 
 
     @Query(value = "SELECT id, nombre, costo FROM tratamiento", nativeQuery = true)
     List<Tratamiento> findAllNative();
+    boolean existsByNombre(String nombre);
 }

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import PatientList from "../components/PatientList";
 import ContactInfo from "../components/ContactInfo";
 import AppointmentHistoryTable from "../components/AppointmentHistoryTable";
+import BalanceCard from "../components/BalanceCard";
+import BalanceModal from "../components/BalanceModal";
 
 const PatientDetailPage = () => {
   const { cedula } = useParams();
@@ -14,6 +16,7 @@ const PatientDetailPage = () => {
   const [activeTab, setActiveTab] = useState("appointment");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
 
   /* =========================
      🔧 Normalizadores DEFINITIVOS
@@ -54,50 +57,50 @@ const PatientDetailPage = () => {
      📡 Fetch paciente + turnos
      ========================= */
 
-  useEffect(() => {
+  const fetchData = useCallback(async () => {
     if (!cedula) return;
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError(false);
+    try {
+      setLoading(true);
+      setError(false);
 
-        const [infoRes, turnosRes] = await Promise.all([
-          fetch(`http://localhost:8080/api/cliente/${cedula}/info`),
-          fetch(`http://localhost:8080/api/cliente/${cedula}/turnos`)
-        ]);
+      const [infoRes, turnosRes] = await Promise.all([
+        fetch(`http://localhost:8080/api/cliente/${cedula}/info`),
+        fetch(`http://localhost:8080/api/cliente/${cedula}/turnos`)
+      ]);
 
-        if (!infoRes.ok || !turnosRes.ok) throw new Error();
+      if (!infoRes.ok || !turnosRes.ok) throw new Error();
 
-        const info = await infoRes.json();
-        const turnosRaw = await turnosRes.json();
+      const info = await infoRes.json();
+      const turnosRaw = await turnosRes.json();
 
-        console.log("🧪 TURNOS RAW:", turnosRaw);
+      console.log("🧪 TURNOS RAW:", turnosRaw);
 
-        const turnosNormalizados = Array.isArray(turnosRaw)
-          ? turnosRaw.map((t) => ({
-              id: t.id,
-              date: normalizeDate(t.fecha),
-              time: normalizeTime(t.horaInicio),
-              treatment: t.tratamiento ?? "—",
-              notes: ""
-            }))
-          : [];
+      const turnosNormalizados = Array.isArray(turnosRaw)
+        ? turnosRaw.map((t) => ({
+            id: t.id,
+            date: normalizeDate(t.fecha),
+            time: normalizeTime(t.horaInicio),
+            treatment: t.tratamiento ?? "—",
+            notes: ""
+          }))
+        : [];
 
-        console.table(turnosNormalizados);
+      console.table(turnosNormalizados);
 
-        setPatientInfo(info);
-        setAppointments(turnosNormalizados);
-      } catch (err) {
-        console.error("❌ Error cargando paciente:", err);
-        setError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+      setPatientInfo(info);
+      setAppointments(turnosNormalizados);
+    } catch (err) {
+      console.error("❌ Error cargando paciente:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
   }, [cedula]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   /* =========================
      ⏳ Estados
@@ -136,21 +139,29 @@ const PatientDetailPage = () => {
 
       <main className="flex-1 overflow-y-auto bg-white">
         {/* Header */}
-        <div className="px-8 py-6 flex items-center gap-4">
-          <img
-            src={
-              patientInfo.avatarUrl ??
-              "https://api.dicebear.com/7.x/avataaars/svg?seed=default"
-            }
-            alt={patientInfo.nombre}
-            className="w-20 h-20 rounded-full"
-          />
-          <div>
-            <h1 className="text-2xl font-semibold">{patientInfo.nombre}</h1>
-            <p className="text-sm text-gray-500">
-              Ultima visita: {patientInfo.ultimaVisita ?? "Nunca"}
-            </p>
+        <div className="px-8 py-6">
+          <div className="flex items-center gap-4 mb-4">
+            <img
+              src={
+                patientInfo.avatarUrl ??
+                "https://api.dicebear.com/7.x/avataaars/svg?seed=default"
+              }
+              alt={patientInfo.nombre}
+              className="w-20 h-20 rounded-full"
+            />
+            <div className="flex-1">
+              <h1 className="text-2xl font-semibold">{patientInfo.nombre}</h1>
+              <p className="text-sm text-gray-500">
+                Ultima visita: {patientInfo.ultimaVisita ?? "Nunca"}
+              </p>
+            </div>
           </div>
+
+          {/* Balance Card */}
+          <BalanceCard 
+            deuda={patientInfo.deuda || 0}
+            onGestionarSaldo={() => setShowBalanceModal(true)}
+          />
         </div>
 
         {/* Tabs */}
@@ -189,6 +200,15 @@ const PatientDetailPage = () => {
           )}
         </div>
       </main>
+
+      {/* Modal de Gestión de Saldo */}
+      {showBalanceModal && (
+        <BalanceModal
+          patient={patientInfo}
+          onClose={() => setShowBalanceModal(false)}
+          onUpdate={fetchData}
+        />
+      )}
     </div>
   );
 };
