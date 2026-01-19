@@ -2,6 +2,11 @@ import React from 'react';
 import { Calendar } from 'lucide-react';
 
 const DateInput = ({ value, onChange, slotsAvailable }) => {
+  const today = new Date();
+  const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    .toISOString()
+    .split('T')[0];
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -14,7 +19,7 @@ const DateInput = ({ value, onChange, slotsAvailable }) => {
             type="date"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            min={new Date().toISOString().split('T')[0]}
+            min={minDate}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
           />
         </div>

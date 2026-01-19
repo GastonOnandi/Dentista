@@ -7,7 +7,12 @@ const TodaySchedule = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+    // Obtener fecha local correctamente
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const today = `${year}-${month}-${day}`;
 
     fetch(`http://localhost:8080/api/turno/fechas?inicio=${today}&fin=${today}`)
       .then((res) => {
@@ -19,7 +24,17 @@ const TodaySchedule = () => {
       .then((data) => {
         console.log("Data received:", data); // Para debug
         // Asegurarse de que data sea un array
-        setAppointments(Array.isArray(data) ? data : []);
+        const appointmentsArray = Array.isArray(data) ? data : [];
+        
+        // Filtrar solo los turnos de la hora actual en adelante
+        const now = new Date();
+        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        
+        const futureAppointments = appointmentsArray.filter(apt => {
+          return apt.horaInicio >= currentTime;
+        });
+        
+        setAppointments(futureAppointments);
         setLoading(false);
       })
       .catch((err) => {

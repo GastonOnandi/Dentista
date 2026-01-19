@@ -12,12 +12,15 @@ const DashboardPage = () => {
             Bienvenido, Dr. Hernandez!
           </h1>
           <p className="text-gray-500 mt-1">
-            {new Date().toLocaleDateString('es-UY', {
+            {new Date().toLocaleString('es-UY', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
-              day: 'numeric'
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
             })}
+
           </p>
         </div>
 
