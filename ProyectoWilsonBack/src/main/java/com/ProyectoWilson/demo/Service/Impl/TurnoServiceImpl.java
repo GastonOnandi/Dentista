@@ -41,18 +41,23 @@ public class TurnoServiceImpl implements TurnoService {
     @Override
     public TurnoResponseDTO agendarTurno(TurnoRequestDTO dto) {
 
+
         Cliente cliente = clienteRepository.findById(dto.getIdCliente())
                 .orElseThrow(ClienteNoExiste::new);
 
+        Turno turno = new Turno();
+
+        if (dto.getIdTratamiento() != null){
         Tratamiento tratamiento = tratamientoRepository.findById(dto.getIdTratamiento())
                 .orElseThrow(TratamientoNoExiste::new);
+            turno.setTratamientoAsociado(tratamiento);
+        }
 
-        Turno turno = new Turno();
         turno.setFecha(dto.getFecha());
         turno.setHoraInicio(dto.getHoraInicio());
         turno.setHoraFin(dto.getHoraFin());
         turno.setClienteAsociado(cliente);
-        turno.setTratamientoAsociado(tratamiento);
+
 
         turnoRepository.save(turno);
 
@@ -94,7 +99,7 @@ public class TurnoServiceImpl implements TurnoService {
              TurnoResponseDTO turnoResponseDTO = new TurnoResponseDTO(
                     turno.getId(),
                     turno.getClienteAsociado().getNombre(),
-                    turno.getTratamientoAsociado().getNombre(),
+                     turno.getTratamientoAsociado() != null ? turno.getTratamientoAsociado().getNombre() : null,
                     turno.getFecha(),
                     turno.getHoraInicio(),
                     turno.getHoraFin()

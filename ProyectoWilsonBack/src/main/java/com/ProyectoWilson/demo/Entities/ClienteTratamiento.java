@@ -26,7 +26,7 @@ public class ClienteTratamiento {
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "id_tratamiento")
     private Tratamiento tratamiento;
 

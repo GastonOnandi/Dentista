@@ -79,17 +79,13 @@ const RegisterAppointmentPage = () => {
       return setError('Seleccione un cliente de la lista');
     }
 
-    if (!formData.treatmentId) {
-      return setError('Seleccione un tratamiento');
-    }
-
     if (!formData.date) {
       return setError('Seleccione una fecha');
     }
 
     const payload = {
       idCliente: formData.patientId,
-      idTratamiento: formData.treatmentId,
+      idTratamiento: formData.treatmentId || null,
       fecha: formData.date,
       horaInicio: formData.startTime,
       horaFin: formData.endTime,

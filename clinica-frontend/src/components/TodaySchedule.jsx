@@ -7,42 +7,51 @@ const TodaySchedule = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Obtener fecha local correctamente
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const today = `${year}-${month}-${day}`;
+    const fetchAppointments = () => {
+      // Obtener fecha local correctamente
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${year}-${month}-${day}`;
 
-    fetch(`http://localhost:8080/api/turno/fechas?inicio=${today}&fin=${today}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Data received:", data); // Para debug
-        // Asegurarse de que data sea un array
-        const appointmentsArray = Array.isArray(data) ? data : [];
-        
-        // Filtrar solo los turnos de la hora actual en adelante
-        const now = new Date();
-        const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-        
-        const futureAppointments = appointmentsArray.filter(apt => {
-          return apt.horaInicio >= currentTime;
+      fetch(`http://localhost:8080/api/turno/fechas?inicio=${today}&fin=${today}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          console.log("Data received:", data); // Para debug
+          // Asegurarse de que data sea un array
+          const appointmentsArray = Array.isArray(data) ? data : [];
+          
+          // Filtrar solo los turnos de la hora actual en adelante
+          const now = new Date();
+          const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+          
+          const futureAppointments = appointmentsArray.filter(apt => {
+            return apt.horaInicio >= currentTime;
+          });
+          
+          setAppointments(futureAppointments);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error loading schedule:", err);
+          setError(err.message);
+          setAppointments([]); // Establecer array vacío en caso de error
+          setLoading(false);
         });
-        
-        setAppointments(futureAppointments);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading schedule:", err);
-        setError(err.message);
-        setAppointments([]); // Establecer array vacío en caso de error
-        setLoading(false);
-      });
+    };
+
+    fetchAppointments();
+    
+    // Recargar cada 30 segundos para mantener actualizado
+    const interval = setInterval(fetchAppointments, 30000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -77,7 +86,8 @@ const TodaySchedule = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-gray-900">
-                  {appointment.nombreCliente} - {appointment.nombreTratamiento}
+                  {appointment.nombreCliente}
+                  {appointment.nombreTratamiento && ` - ${appointment.nombreTratamiento}`}
                 </h3>
                 <p className="text-sm text-gray-500">
                   {appointment.horaInicio} - {appointment.horaFin}
