@@ -79,25 +79,63 @@ const RegisterAppointmentPage = () => {
       return setError('Seleccione un cliente de la lista');
     }
 
+    if (!formData.treatmentId) {
+      return setError('Seleccione un tratamiento');
+    }
+
     if (!formData.date) {
       return setError('Seleccione una fecha');
     }
 
+    // Validar que no se agende en hora pasada si es hoy
+    const now = new Date();
+    const selectedDate = new Date(formData.date + 'T00:00:00');
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    
+    if (selectedDate.getTime() === today.getTime()) {
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      if (formData.startTime < currentTime) {
+        return setError('No se puede agendar una cita en una hora pasada');
+      }
+    }
+
     const payload = {
       idCliente: formData.patientId,
-      idTratamiento: formData.treatmentId || null,
+      idTratamiento: formData.treatmentId,
       fecha: formData.date,
       horaInicio: formData.startTime,
       horaFin: formData.endTime,
     };
 
-    console.log('📤 Payload being sent:', payload);
+    console.log('📤 Payload turno:', payload);
 
     try {
       setLoading(true);
-      const response = await axios.post(`${API_URL}/turno/agendar`, payload);
-      console.log('✅ Response:', response.data);
-      alert('Cita registrada exitosamente!');
+      
+      // 1. Crear el turno
+      const turnoResponse = await axios.post(`${API_URL}/turno/agendar`, payload);
+      console.log('✅ Turno creado:', turnoResponse.data);
+      
+      // 2. Crear el reporte automáticamente usando asociarTratamiento
+      const reportPayload = {
+        idCliente: formData.patientId,
+        idTratamiento: formData.treatmentId,
+        fecha: formData.date
+      };
+      
+      console.log('📤 Payload reporte:', reportPayload);
+      
+      try {
+        const reportResponse = await axios.post(`${API_URL}/clientetratamiento/crear`, reportPayload);
+        console.log('✅ Reporte creado:', reportResponse.data);
+        alert('Cita y reporte registrados exitosamente!');
+      } catch (reportError) {
+        console.error('⚠️ Error creando reporte:', reportError);
+        console.error('⚠️ Error response:', reportError.response?.data);
+        alert('Cita creada, pero hubo un error al crear el reporte. Verifica la consola.');
+      }
+      
       navigate('/');
     } catch (e) {
       console.error('❌ Error completo:', e);

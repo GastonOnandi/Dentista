@@ -1,5 +1,6 @@
 package com.ProyectoWilson.demo.Controller;
 
+import com.ProyectoWilson.demo.DTO.Request.ClienteTratamientoRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.RangoDeFechas;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.Entities.ClienteTratamiento;
@@ -17,6 +18,17 @@ import java.util.List;
 public class ClienteTratamientoController {
     @Autowired
     private ClienteTratamientoService clienteTratamientoService;
+
+    @PostMapping("/crear")
+    public ResponseEntity<String> crear(@RequestBody ClienteTratamientoRequestDTO dto) {
+        clienteTratamientoService.asociarTratamiento(
+                dto.getIdCliente(),
+                dto.getIdTratamiento(),
+                dto.getFecha()
+        );
+        return ResponseEntity.ok("Reporte creado exitosamente");
+    }
+
     @GetMapping("/deudas")
     public ResponseEntity<List<DeudaTratamientoDTO>> obtenerTodasLasDeudas() {
         List<DeudaTratamientoDTO> response = clienteTratamientoService.obtenerTodasLasDeudas();
