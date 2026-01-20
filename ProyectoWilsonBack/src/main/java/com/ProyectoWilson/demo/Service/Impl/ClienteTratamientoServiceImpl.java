@@ -41,7 +41,6 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
         clienteTratamiento.setDebe(tratamiento.getCosto());
         clienteTratamientoRepository.save(clienteTratamiento);
         cliente.getTratamientos().add(clienteTratamiento);
-        cliente.setDeuda(cliente.getDeuda() + clienteTratamiento.getDebe());
         tratamiento.getClienteTratamientos().add(clienteTratamiento);
     }
 
@@ -52,8 +51,9 @@ public class ClienteTratamientoServiceImpl implements ClienteTratamientoService 
         if (clienteTratamiento.getDebe()>= monto){
             clienteTratamiento.setPago(clienteTratamiento.getPago() + monto );
             clienteTratamiento.setDebe(clienteTratamiento.getDebe() - monto);
-            cliente.setDeuda(cliente.getDeuda() - monto);
+            cliente.setDeuda(cliente.getDeuda() + monto);
             clienteTratamientoRepository.save(clienteTratamiento);
+            clienteRepository.save(cliente);
         }
         else {
             throw new MontoMayorQueDeudaException();

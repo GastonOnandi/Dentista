@@ -15,6 +15,7 @@ import com.ProyectoWilson.demo.Exceptions.Cliente.ClienteYaExisteException;
 import com.ProyectoWilson.demo.Mapper.ClienteMapper;
 import com.ProyectoWilson.demo.Mapper.TurnoMapper;
 import com.ProyectoWilson.demo.Repository.ClienteRepository;
+import com.ProyectoWilson.demo.Repository.Historico.HistoricoClienteRepository;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteConsideracionService;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteService;
 import com.ProyectoWilson.demo.Service.Interfaces.ClienteTratamientoService;
@@ -40,6 +41,9 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private HistoricoClienteRepository historicoClienteRepository;
 
     @Autowired
     private TurnoMapper turnoMapper;
@@ -167,9 +171,7 @@ public class ClienteServiceImpl implements ClienteService {
             historicoCliente.setDeudaAnterior(deudaAnterior);
             historicoCliente.setDeudaNueva(deudaNueva);
         }
-
+        historicoClienteRepository.save(historicoCliente);
     }
-
-
 }
 

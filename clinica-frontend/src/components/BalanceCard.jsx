@@ -1,4 +1,4 @@
-const BalanceCard = ({ deuda, onGestionarSaldo }) => {
+export default function BalanceCard({ deuda, onGestionarSaldo }) {
   const getBalanceInfo = (deuda) => {
     if (deuda > 0) {
       return {
@@ -52,6 +52,4 @@ const BalanceCard = ({ deuda, onGestionarSaldo }) => {
       </div>
     </div>
   );
-};
-
-export default BalanceCard;
+}

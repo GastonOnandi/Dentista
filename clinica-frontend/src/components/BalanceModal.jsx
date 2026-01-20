@@ -19,12 +19,22 @@ export default function BalanceModal({ patient, onClose, onUpdate }) {
       setLoading(true);
       setError("");
 
+      // Obtener la cédula correctamente y convertir a número
+      const cedulaCliente = Number(patient.cedula) || Number(patient.id);
+      
+      console.log('🔍 DEBUG COMPLETO:');
+      console.log('📋 Objeto patient completo:', patient);
+      console.log('📋 patient.cedula (original):', patient.cedula, typeof patient.cedula);
+      console.log('📋 Cédula convertida a número:', cedulaCliente, typeof cedulaCliente);
+      console.log('🌐 URL completa:', `http://localhost:8080/api/cliente/${cedulaCliente}/actualizar-deuda`);
+
+      // Lógica correcta: pago reduce deuda, cargo aumenta deuda
       const cambio = tipo === "pago" 
-        ? -parseFloat(monto)
-        : parseFloat(monto);
+        ? -parseFloat(monto)     // Pago: restar de la deuda
+        : parseFloat(monto);     // Cargo: sumar a la deuda
 
       const response = await fetch(
-        `http://localhost:8080/api/cliente/${patient.cedula}/actualizar-deuda`,
+        `http://localhost:8080/api/cliente/${cedulaCliente}/actualizar-deuda`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -35,13 +45,22 @@ export default function BalanceModal({ patient, onClose, onUpdate }) {
         }
       );
 
-      if (!response.ok) throw new Error("Error al actualizar saldo");
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Error del servidor:', errorText);
+        throw new Error(errorText || "Error al actualizar saldo");
+      }
 
-      onUpdate();
+      console.log('✅ Saldo actualizado correctamente');
+      
+      // Primero actualizar los datos
+      await onUpdate();
+      
+      // Luego cerrar el modal
       onClose();
     } catch (err) {
-      setError("Error al procesar la operación");
-      console.error(err);
+      console.error('❌ Error completo:', err);
+      setError(err.message || "Error al procesar la operación");
     } finally {
       setLoading(false);
     }

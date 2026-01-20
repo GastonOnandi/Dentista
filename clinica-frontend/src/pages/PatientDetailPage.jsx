@@ -204,7 +204,10 @@ const PatientDetailPage = () => {
       {/* Modal de Gestión de Saldo */}
       {showBalanceModal && (
         <BalanceModal
-          patient={patientInfo}
+          patient={{
+            ...patientInfo,
+            cedula: Number(cedula)
+          }}
           onClose={() => setShowBalanceModal(false)}
           onUpdate={fetchData}
         />
