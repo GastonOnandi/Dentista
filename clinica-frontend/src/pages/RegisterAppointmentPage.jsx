@@ -19,6 +19,7 @@ const RegisterAppointmentPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [defaultTreatmentId, setDefaultTreatmentId] = useState(null);
 
   const [formData, setFormData] = useState({
     patientId: null,
@@ -35,7 +36,21 @@ const RegisterAppointmentPage = () => {
       .catch(err => console.error('Error cargando pacientes:', err));
     
     axios.get(`${API_URL}/tratamiento/listar`)
-      .then(r => setTreatments(r.data))
+      .then(r => {
+        setTreatments(r.data);
+        
+        // Buscar si ya existe un tratamiento "Sin tratamiento"
+        const defaultTreatment = r.data.find(t => 
+          t.nombre?.toLowerCase() === 'sin tratamiento'
+        );
+        
+        if (defaultTreatment) {
+          setDefaultTreatmentId(defaultTreatment.id);
+          console.log('✅ Tratamiento por defecto encontrado:', defaultTreatment);
+        } else {
+          console.log('⚠️ No se encontró tratamiento "Sin tratamiento". Créalo manualmente en la base de datos con costo 1.');
+        }
+      })
       .catch(err => console.error('Error cargando tratamientos:', err));
   }, []);
 
@@ -72,15 +87,21 @@ const RegisterAppointmentPage = () => {
     }
   };
 
+  const getOrCreateDefaultTreatment = async () => {
+    // Si ya tenemos el ID del tratamiento por defecto, usarlo
+    if (defaultTreatmentId) {
+      return defaultTreatmentId;
+    }
+
+    // Si no existe, mostrar error al usuario
+    throw new Error('No existe el tratamiento "Sin tratamiento". Por favor créalo manualmente con nombre "Sin tratamiento" y costo 1, o selecciona un tratamiento de la lista.');
+  };
+
   const handleSubmit = async () => {
     setError(null);
 
     if (!formData.patientId) {
       return setError('Seleccione un cliente de la lista');
-    }
-
-    if (!formData.treatmentId) {
-      return setError('Seleccione un tratamiento');
     }
 
     if (!formData.date) {
@@ -100,27 +121,36 @@ const RegisterAppointmentPage = () => {
       }
     }
 
-    const payload = {
-      idCliente: formData.patientId,
-      idTratamiento: formData.treatmentId,
-      fecha: formData.date,
-      horaInicio: formData.startTime,
-      horaFin: formData.endTime,
-    };
-
-    console.log('📤 Payload turno:', payload);
-
     try {
       setLoading(true);
+      
+      // Determinar qué tratamiento usar
+      let treatmentIdToUse = formData.treatmentId;
+      
+      if (!treatmentIdToUse) {
+        // Si no hay tratamiento seleccionado, obtener o crear el tratamiento por defecto
+        treatmentIdToUse = await getOrCreateDefaultTreatment();
+        console.log('📝 Usando tratamiento por defecto:', treatmentIdToUse);
+      }
+
+      const payload = {
+        idCliente: formData.patientId,
+        idTratamiento: treatmentIdToUse,
+        fecha: formData.date,
+        horaInicio: formData.startTime,
+        horaFin: formData.endTime,
+      };
+
+      console.log('📤 Payload turno:', payload);
       
       // 1. Crear el turno
       const turnoResponse = await axios.post(`${API_URL}/turno/agendar`, payload);
       console.log('✅ Turno creado:', turnoResponse.data);
       
-      // 2. Crear el reporte automáticamente usando asociarTratamiento
+      // 2. Crear el reporte
       const reportPayload = {
         idCliente: formData.patientId,
-        idTratamiento: formData.treatmentId,
+        idTratamiento: treatmentIdToUse,
         fecha: formData.date
       };
       
@@ -143,7 +173,7 @@ const RegisterAppointmentPage = () => {
       
       const errorMessage = e.response?.data?.message || 
                           e.response?.data?.error || 
-                          'Error scheduling appointment';
+                          'Error al agendar la cita';
       setError(errorMessage);
     } finally {
       setLoading(false);
