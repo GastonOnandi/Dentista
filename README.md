@@ -3,7 +3,6 @@
 Sistema backend para la gestión de una clínica odontológica.
 Permite administrar pacientes, tratamientos, turnos y pagos, exponiendo una API REST desarrollada con Java y Spring Boot.
 
-Este proyecto fue desarrollado con fines académicos y de aprendizaje, aplicando buenas prácticas de diseño y arquitectura backend.
 
 🚀 Tecnologías utilizadas
 
