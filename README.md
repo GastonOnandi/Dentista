@@ -24,6 +24,7 @@ Maven
 Git
 
 📌 Funcionalidades principales
+
 👤 Gestión de Pacientes
 
 Alta, baja y modificación de pacientes
@@ -147,26 +148,26 @@ PUT /api/cliente/clientetratamiento/{id}/pagar
 🗂️ Estructura del proyecto
 src/main/java
  └── com.example.dentista
-      ├── controller
-      ├── service
-      ├── repository
-      ├── dto
-      ├── mapper
-      ├── entity
-      └── config
+      |- controller
+      |- service
+      |- repository
+      |- dto
+      |- mapper
+      |- entity
+      |- config
 
 ⚙️ Configuración y ejecución
-1️⃣ Clonar el repositorio
+1️- Clonar el repositorio
 git clone https://github.com/GastonOnandi/Dentista.git
 cd dental-clinic-backend
 
-2️⃣ Configurar la base de datos
+2️- Configurar la base de datos
 
 Editar el archivo application.properties:
 
 spring.datasource.url=jdbc:sqlite:C:/Users/Santiago/Desktop/ProyectoWilson/database/smilecare.db?date_string_format=yyyy-MM-dd
 
-3️⃣ Ejecutar el proyecto
+3️- Ejecutar el proyecto
 mvn spring-boot:run
 
 
