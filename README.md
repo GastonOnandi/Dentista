@@ -1,12 +1,13 @@
-🦷 Sistema de Gestion de Clinica Dental – Backend
+🦷 Sistema de Gestión de Clínica Dental – Backend
 
 Sistema backend para la gestión de una clínica odontológica.
 Permite administrar pacientes, tratamientos, turnos y pagos, exponiendo una API REST desarrollada con Java y Spring Boot.
 
+El proyecto está orientado a simular un sistema real de gestión, aplicando buenas prácticas de arquitectura, separación de responsabilidades y lógica de negocio.
 
 🚀 Tecnologías utilizadas
 
-Java 
+Java
 
 Spring Boot
 
@@ -59,52 +60,115 @@ Listado de deudas pendientes
 
 Cálculo dinámico del estado de pago:
 
-- Pagado
+Pagado
 
-- Pendiente
+Pendiente
 
-Validaciones de datos en servicios
+Validaciones de datos en la capa de servicios
 
-Separación por capas:
+Centralización de la lógica de negocio fuera de los controladores
+
+Uso de DTOs para controlar la exposición de datos
+
+🏗️ Arquitectura del sistema
+
+El proyecto sigue una arquitectura en capas (Layered Architecture), separando responsabilidades para facilitar el mantenimiento, la escalabilidad y el testeo.
+
+🔹 Capas principales
 
 Controller
 
+Expone los endpoints REST
+
+Recibe y valida datos de entrada
+
+Delegación total de lógica a la capa de servicios
+
 Service
+
+Contiene la lógica de negocio
+
+Maneja cálculos de deuda y estado de pago
+
+Coordina operaciones entre repositorios
 
 Repository
 
-Uso de DTOs para exposición de datos
+Acceso a datos mediante Spring Data JPA
 
-🔗 Endpoints principales 
+Abstracción completa de la base de datos
+
+Entity
+
+Modelo de dominio
+
+Mapeo objeto–relacional con JPA / Hibernate
+
+DTO (Data Transfer Objects)
+
+Controla los datos expuestos por la API
+
+Evita exponer entidades directamente
+
+Mapper
+
+Conversión entre entidades y DTOs
+
+Mantiene desacopladas las capas
+
+Config
+
+Configuración general del sistema
+
+Beans, CORS y propiedades de la aplicación
+
+🔁 Flujo de una petición
+Cliente HTTP
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Base de datos (SQLite)
+
+
+La respuesta retorna por el mismo flujo, transformando entidades a DTOs antes de ser enviadas al cliente.
+
+🔗 Endpoints principales
+
 POST /api/cliente/registrar
-GET /api/clientetratamiento/deudas/pendientes
-PUT /api/cliente/clientetratamiento/{id}/pagar
 
+GET /api/clientetratamiento/deudas/pendientes
+
+PUT /api/cliente/clientetratamiento/{id}/pagar
 
 🗂️ Estructura del proyecto
 src/main/java
  └── com.example.dentista
-      |--controller
-      |--service
-      |--repository
-      |--dto
-      |--mapper
-      |--entity
-      |--config
+      ├── controller
+      ├── service
+      ├── repository
+      ├── dto
+      ├── mapper
+      ├── entity
+      └── config
 
 ⚙️ Configuración y ejecución
 1️⃣ Clonar el repositorio
 git clone https://github.com/GastonOnandi/Dentista.git
 cd dental-clinic-backend
 
-2️⃣ Configurar base de datos
+2️⃣ Configurar la base de datos
 
-Editar application.properties:
+Editar el archivo application.properties:
 
-spring.datasource.url=jdbc:sqlite:C:/Users/Santiago/Desktop/Proyecto Wilson/demo (1)/Dentista/ProyectoWilsonBack/database/smilecare.db?date_string_format=yyyy-MM-dd
-
+spring.datasource.url=jdbc:sqlite:C:/Users/Santiago/Desktop/ProyectoWilson/database/smilecare.db?date_string_format=yyyy-MM-dd
 
 3️⃣ Ejecutar el proyecto
+mvn spring-boot:run
+
 
 La API estará disponible en:
 
@@ -112,7 +176,7 @@ http://localhost:8080
 
 🧪 Testing
 
-Pruebas manuales con Postman
+Pruebas manuales utilizando Postman
 
 Validación de endpoints y reglas de negocio
 
@@ -124,13 +188,14 @@ Aplicar lógica de negocio real
 
 Simular un sistema de gestión profesional
 
-Preparar un proyecto para portfolio IT
+Construir un proyecto sólido para portfolio IT
 
 👤 Autor
 
 Santiago Onandi
 Estudiante de Ingeniería Informática
-📧 sonandi1503@gmail.com
+
+📧 Email: sonandi1503@gmail.com
 
 🔗 GitHub: https://github.com/sonandi8053
 
@@ -138,9 +203,8 @@ Estudiante de Ingeniería Informática
 
 ⭐ Posibles mejoras futuras
 
-Documentación con Swagger
+Documentación con Swagger / OpenAPI
 
 Exportación de reportes en PDF
 
-Migrar a PostgreSQL
-
+Migración de base de datos a PostgreSQL
