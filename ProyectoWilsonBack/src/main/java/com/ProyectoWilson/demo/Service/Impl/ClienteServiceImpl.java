@@ -1,5 +1,6 @@
 package com.ProyectoWilson.demo.Service.Impl;
 
+import com.ProyectoWilson.demo.DTO.Request.ClienteConsideracionRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.ClienteRequestDTO;
 import com.ProyectoWilson.demo.DTO.Request.DeudaUpdateDTO;
 import com.ProyectoWilson.demo.DTO.Response.ClienteInfoResponseDTO;
@@ -7,6 +8,7 @@ import com.ProyectoWilson.demo.DTO.Response.ClienteResponseDTO;
 import com.ProyectoWilson.demo.DTO.Response.DeudaTratamientoDTO;
 import com.ProyectoWilson.demo.DTO.Response.TurnoResponseDTO;
 import com.ProyectoWilson.demo.Entities.Cliente;
+import com.ProyectoWilson.demo.Entities.ClienteConsideracion;
 import com.ProyectoWilson.demo.Entities.Enum.TipoConsideracion;
 import com.ProyectoWilson.demo.Entities.Historico.HistoricoCliente;
 import com.ProyectoWilson.demo.Entities.Turno;
@@ -61,17 +63,26 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public void modificarCliente(Long id, ClienteRequestDTO dto) {
-        Cliente clienteViejo = clienteRepository.findById(id).orElseThrow(ClienteNoExiste::new);
-        Cliente clienteNuevo = new Cliente();
-        clienteNuevo.setNombre(dto.getNombre());
-        clienteNuevo.setDireccion(dto.getDireccion());
-        clienteNuevo.setTelefono(dto.getTelefono());
-        clienteNuevo.setCedula(id);
-        clienteNuevo.setHistorico(clienteViejo.getHistorico());
-        clienteNuevo.setTurnos(clienteViejo.getTurnos());
-        clienteNuevo.setTratamientos(clienteViejo.getTratamientos());
-        historicoClienteService.registrarModificacion(clienteViejo,clienteNuevo);
-        clienteRepository.save(clienteNuevo);
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(ClienteNoExiste::new);
+
+        cliente.setNombre(dto.getNombre());
+        cliente.setDireccion(dto.getDireccion());
+        cliente.setTelefono(dto.getTelefono());
+
+        cliente.getConsideraciones().clear();
+
+        if (dto.getConsideraciones() != null) {
+            for (ClienteConsideracionRequestDTO c : dto.getConsideraciones()) {
+                ClienteConsideracion consideracion = new ClienteConsideracion();
+                consideracion.setTipo(c.getTipo());
+                consideracion.setDetalle(c.getDetalle());
+                consideracion.setCliente(cliente);
+                cliente.getConsideraciones().add(consideracion);
+            }
+        }
+
+        historicoClienteService.registrarModificacion(cliente, cliente);
+        clienteRepository.save(cliente);
     }
 
     @Override
