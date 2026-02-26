@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import PatientList from "../components/PatientList";
 import ContactInfo from "../components/ContactInfo";
 import AppointmentHistoryTable from "../components/AppointmentHistoryTable";
@@ -9,6 +9,7 @@ import BalanceModal from "../components/BalanceModal";
 const PatientDetailPage = () => {
   const { cedula } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [patientInfo, setPatientInfo] = useState(null);
   const [appointments, setAppointments] = useState([]);
@@ -23,12 +24,10 @@ const PatientDetailPage = () => {
      ========================= */
 
   const normalizeDate = (value) => {
-    // Backend YA manda yyyy-MM-dd
     return typeof value === "string" ? value : "";
   };
 
   const normalizeTime = (value) => {
-    // Backend manda HH:mm
     return typeof value === "string" ? value.slice(0, 5) : "";
   };
 
@@ -74,8 +73,6 @@ const PatientDetailPage = () => {
       const info = await infoRes.json();
       const turnosRaw = await turnosRes.json();
 
-      console.log("🧪 TURNOS RAW:", turnosRaw);
-
       const turnosNormalizados = Array.isArray(turnosRaw)
         ? turnosRaw.map((t) => ({
             id: t.id,
@@ -85,8 +82,6 @@ const PatientDetailPage = () => {
             notes: ""
           }))
         : [];
-
-      console.table(turnosNormalizados);
 
       setPatientInfo(info);
       setAppointments(turnosNormalizados);
@@ -99,8 +94,11 @@ const PatientDetailPage = () => {
   }, [cedula]);
 
   useEffect(() => {
+    console.log("🔄 location.state:", location.state);
+    console.log("🔄 refresh value:", location.state?.refresh);
     fetchData();
-  }, [fetchData]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cedula, location.state?.refresh]);
 
   /* =========================
      ⏳ Estados
@@ -158,7 +156,7 @@ const PatientDetailPage = () => {
           </div>
 
           {/* Balance Card */}
-          <BalanceCard 
+          <BalanceCard
             deuda={patientInfo.deuda || 0}
             onGestionarSaldo={() => setShowBalanceModal(true)}
           />

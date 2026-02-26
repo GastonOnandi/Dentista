@@ -1,6 +1,9 @@
 const ContactInfo = ({ patient }) => {
   if (!patient) return null;
 
+  const alergias = patient.alergias ?? [];
+  const medicaciones = patient.medicaciones ?? [];
+
   return (
     <div className="space-y-10">
 
@@ -30,13 +33,13 @@ const ContactInfo = ({ patient }) => {
             Alergias
           </h3>
 
-          {(patient.alergias ?? []).length === 0 && (
+          {alergias.length === 0 && (
             <p className="text-sm text-gray-400">
               Sin alergias registradas
             </p>
           )}
 
-          {(patient.alergias ?? []).map((item, index) => (
+          {alergias.map((item, index) => (
             <div
               key={index}
               className="flex gap-3 px-4 py-2 bg-red-50 text-red-700 rounded-lg border border-red-200"
@@ -52,13 +55,13 @@ const ContactInfo = ({ patient }) => {
             Medicaciones
           </h3>
 
-          {(patient.medicaciones ?? []).length === 0 && (
+          {medicaciones.length === 0 && (
             <p className="text-sm text-gray-400">
               No hay medicamentos
             </p>
           )}
 
-          {(patient.medicaciones ?? []).map((item, index) => (
+          {medicaciones.map((item, index) => (
             <div
               key={index}
               className="flex gap-3 px-4 py-2 bg-blue-50 text-blue-800 rounded-lg border border-blue-200"

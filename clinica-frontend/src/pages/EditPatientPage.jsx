@@ -44,18 +44,12 @@ const EditPatientPage = () => {
 
         const data = await response.json();
 
-        // 🔑 MAPEO CORRECTO SEGÚN BACKEND
         setFullName(data.nombre || "");
         setPhone(data.telefono ? data.telefono.toString() : "");
         setAddress(data.direccion || "");
 
-        setAllergies(
-          (data.alergias || []).map(a => a.detalle)
-        );
-
-        setMedications(
-          (data.medicaciones || []).map(m => m.detalle)
-        );
+        setAllergies((data.alergias || []).map(c => c.detalle));
+        setMedications((data.medicaciones || []).map(c => c.detalle));
       } catch (error) {
         console.error("❌ Error:", error);
         alert("Error cargando datos del paciente");
@@ -103,20 +97,22 @@ const EditPatientPage = () => {
   };
 
   const handleUpdate = async () => {
-    // 🔑 PAYLOAD ADAPTADO AL BACKEND
+    console.log("allergies:", allergies);
+    console.log("medications:", medications);
+    console.log("tipo allergies:", typeof allergies, Array.isArray(allergies));
+    console.log("tipo medications:", typeof medications, Array.isArray(medications));
+
     const payload = {
       nombre: fullName,
       telefono: Number(phone),
       direccion: address,
-      alergias: allergies.map(detalle => ({
-        tipo: "Alergia",
-        detalle
-      })),
-      medicaciones: medications.map(detalle => ({
-        tipo: "Medicamento",
-        detalle
-      }))
+      consideraciones: [
+        ...allergies.map(detalle => ({ tipo: "ALERGIA", detalle })),
+        ...medications.map(detalle => ({ tipo: "MEDICAMENTO", detalle }))
+      ]
     };
+
+    console.log("payload:", JSON.stringify(payload, null, 2));
 
     try {
       const response = await fetch(
@@ -134,7 +130,7 @@ const EditPatientPage = () => {
         throw new Error("Error actualizando paciente");
       }
 
-      navigate(`/patients/${cedula}`);
+      navigate(`/patients/${cedula}`, { state: { refresh: Date.now() } });
     } catch (error) {
       console.error("❌ Error:", error);
       alert("Error actualizando paciente");
